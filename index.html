@@ -100,42 +100,15 @@
             </div>
         </section>
 
-        <!-- SECÇÃO: MODALIDADES -->
+        <!-- SECÇÃO: MODALIDADES (DINÂMICO) -->
         <section id="modalidades" data-section-id="modalidades" class="py-6 space-y-6">
             <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-8 space-y-2">
                     <h2 class="text-3xl md:text-4xl font-extrabold text-white">Escolha Como Quer Treinar</h2>
                     <p class="text-gray-400 max-w-xl mx-auto text-sm">Opções flexíveis para se encaixar perfeitamente no seu estilo de vida e objetivos.</p>
                 </div>
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Card 1: Consultoria Online -->
-                    <div class="bg-gray-950 p-6 sm:p-8 rounded-3xl border border-gray-800 flex flex-col justify-between hover:border-amber-500/50 transition shadow-2xl">
-                        <div>
-                            <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-400/20">ON-LINE</span>
-                            <h3 class="text-2xl font-bold mt-3 mb-2 text-white">Consultoria Online</h3>
-                            <p class="text-gray-400 mb-5 text-sm leading-relaxed">Treine de onde estiver, com planilhas e orientações elaboradas sob medida para você ou em dupla (condição especial para casal).</p>
-                            <ul class="space-y-2 text-sm text-gray-300 mb-6">
-                                <li>• Treinos estruturados para sua evolução</li>
-                                <li>• Opção individual e para casal</li>
-                                <li>• Flexibilidade de horários e locais</li>
-                            </ul>
-                        </div>
-                        <a href="https://wa.me/5551980161186?text=Olá%20Diego,%20gostaria%20de%20saber%20mais%20sobre%20a%20Consultoria%20Online." target="_blank" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl text-center transition block shadow-lg text-sm">Tirar Dúvidas - Consultoria Online</a>
-                    </div>
-                    <!-- Card 2: Treinamento Presencial -->
-                    <div class="bg-gray-950 p-6 sm:p-8 rounded-3xl border border-gray-800 flex flex-col justify-between hover:border-amber-500/50 transition shadow-2xl">
-                        <div>
-                            <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-400/20">PRESENCIAL</span>
-                            <h3 class="text-2xl font-bold mt-3 mb-2 text-white">Treinamento Presencial</h3>
-                            <p class="text-gray-400 mb-5 text-sm leading-relaxed">Acompanhamento hora/aula individual ou em casal, com foco total na intensidade, segurança e cobrança mensal antecipada.</p>
-                            <ul class="space-y-2 text-sm text-gray-300 mb-6">
-                                <li>• Aulas individuais ou em casal</li>
-                                <li>• Plano alimentar</li>
-                                <li>• Pagamento facilitado via Pix ou Cartão</li>
-                            </ul>
-                        </div>
-                        <a href="https://wa.me/5551980161186?text=Olá%20Diego,%20gostaria%20de%20saber%20mais%20sobre%20o%20Treinamento%20Presencial." target="_blank" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl text-center transition block shadow-lg text-sm">Tirar Dúvidas - Treinamento Presencial</a>
-                    </div>
+                <div id="publicModalidadesContainer" class="grid md:grid-cols-2 gap-6">
+                    <p class="text-xs text-gray-500 italic col-span-full text-center py-4">A carregar modalidades...</p>
                 </div>
             </div>
         </section>
@@ -293,6 +266,7 @@
 
         document.addEventListener("DOMContentLoaded", async function() {
             await loadPublicBio();
+            await loadPublicModalidades();
             await loadPublicCarousels();
             await loadPublicTestimonials();
             await loadPublicSpreadsheets();
@@ -330,6 +304,69 @@
                 }
             } catch (err) {
                 console.error("Erro ao carregar bio:", err);
+            }
+        }
+
+        async function loadPublicModalidades() {
+            const container = document.getElementById('publicModalidadesContainer');
+            if (!container) return;
+            try {
+                const docSnap = await getDoc(doc(db, "siteConfig", "modalidades"));
+                let methods = [];
+                if (docSnap.exists() && docSnap.data().methods) {
+                    methods = docSnap.data().methods;
+                } else {
+                    methods = [
+                        {
+                            title: "Consultoria Online",
+                            desc: "Treine de onde estiver, com planilhas e orientações elaboradas sob medida para você ou em dupla (condição especial para casal).",
+                            items: ["Treinos estruturados para sua evolução", "Opção individual e para casal", "Flexibilidade de horários e locais"],
+                            btn: "Tirar Dúvidas - Consultoria Online"
+                        },
+                        {
+                            title: "Treinamento Presencial",
+                            desc: "Acompanhamento hora/aula individual ou em casal, com foco total na intensidade, segurança e cobrança mensal antecipada.",
+                            items: ["Aulas individuais ou em casal", "Plano alimentar", "Pagamento facilitado via Pix ou Cartão"],
+                            btn: "Tirar Dúvidas - Treinamento Presencial"
+                        }
+                    ];
+                }
+
+                container.innerHTML = '';
+                methods.forEach(m => {
+                    let itemsHTML = '';
+                    if (m.items && Array.isArray(m.items)) {
+                        m.items.forEach(item => {
+                            itemsHTML += `<li class="flex items-center gap-2 text-gray-300 text-sm"><span class="text-amber-400">✓</span> ${item}</li>`;
+                        });
+                    }
+
+                    let badge = "MODALIDADE";
+                    if (m.title.toLowerCase().includes('online')) badge = "ON-LINE";
+                    if (m.title.toLowerCase().includes('presencial')) badge = "PRESENCIAL";
+
+                    const whatsappMsg = encodeURIComponent(`Olá Diego, gostaria de saber mais sobre o ${m.title}.`);
+
+                    const cardHTML = `
+                        <div class="bg-gray-950 p-6 sm:p-8 rounded-3xl border border-gray-800 flex flex-col justify-between hover:border-amber-500/50 transition shadow-2xl space-y-6">
+                            <div class="space-y-4">
+                                <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-400/20 inline-block">${badge}</span>
+                                <h3 class="text-2xl font-bold text-white">${m.title}</h3>
+                                <p class="text-gray-400 text-sm leading-relaxed">${m.desc}</p>
+                                <ul class="space-y-2 pt-2 border-t border-gray-800/60">
+                                    ${itemsHTML}
+                                </ul>
+                            </div>
+                            <div>
+                                <a href="https://wa.me/5551980161186?text=${whatsappMsg}" target="_blank" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl text-center transition block shadow-lg text-sm">${m.btn || 'Tirar Dúvidas'}</a>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            } catch (err) {
+                console.error("Erro ao carregar modalidades públicas:", err);
+                container.innerHTML = '<p class="text-xs text-rose-500 italic col-span-full text-center py-4">Erro ao carregar modalidades.</p>';
             }
         }
 
