@@ -18,176 +18,190 @@
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-gray-950">
 
-    <!-- Header do Painel -->
-    <header class="bg-gray-950 border-b border-gray-800 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <img src="logo.png" alt="Logo" class="w-10 h-10 object-contain">
-                <div>
-                    <h1 class="font-bold text-lg text-white">Painel Administrativo</h1>
-                    <span class="text-xs text-amber-400">Team Vasconcelos</span>
-                </div>
+    <!-- ECRÃ DE LOGIN COM CONTA GOOGLE -->
+    <div id="loginContainer" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-950 px-6">
+        <div class="bg-gray-900 border border-gray-800 p-8 rounded-3xl max-w-md w-full text-center space-y-6 shadow-2xl">
+            <div class="flex justify-center">
+                <img src="logo.png" alt="Logo" class="w-20 h-20 object-contain">
             </div>
-            <div class="flex items-center gap-4">
-                <a href="index.html" target="_blank" class="text-sm bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-300 px-4 py-2 rounded-xl transition">Ver Site Principal</a>
+            <div>
+                <h2 class="text-2xl font-bold text-white">Painel Administrativo</h2>
+                <p class="text-gray-400 text-sm mt-1">Team Vasconcelos</p>
             </div>
-        </div>
-    </header>
-
-    <!-- Navegação por Abas Original -->
-    <div class="bg-gray-950/50 px-6">
-        <div class="max-w-7xl mx-auto flex gap-4 overflow-x-auto border-b border-gray-800">
-            <button onclick="switchTab('depoimentos')" id="tabBtn-depoimentos" class="py-4 px-4 font-bold text-sm border-b-2 -mb-[1px] border-amber-400 text-amber-400 transition whitespace-nowrap cursor-pointer">Depoimentos</button>
-            <button onclick="switchTab('carrossel')" id="tabBtn-carrossel" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Gestão de Carrossel</button>
-            <button onclick="switchTab('planilhas')" id="tabBtn-planilhas" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Planilhas de Treino</button>
-            <button onclick="switchTab('conteudo')" id="tabBtn-conteudo" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Conteúdo do Site (Quem Sou Eu)</button>
+            <p class="text-gray-300 text-xs leading-relaxed">Faça login com a sua conta Google autorizada para aceder à gestão completa do site.</p>
+            <button type="button" onclick="loginGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-900 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-3 shadow-lg text-sm cursor-pointer">
+                <svg class="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.95H1.14v3.15C3.15 21.36 7.22 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.28 14.25c-.25-.72-.38-1.49-.38-2.25s.13-1.53.38-2.25V6.6H1.14C.41 8.08 0 9.75 0 12s.41 3.92 1.14 5.4l4.14-3.15z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.64 1.14 6.6l4.14 3.15c.95-2.84 3.6-4.95 6.72-4.95z"/>
+                </svg>
+                Entrar com Google
+            </button>
         </div>
     </div>
 
-    <!-- Conteúdo Principal -->
-    <main class="max-w-7xl mx-auto w-full px-6 py-10 flex-grow">
-
-        <!-- ABA 1: DEPOIMENTOS -->
-        <section id="section-depoimentos" class="space-y-8">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
-                    <span class="text-xs uppercase text-gray-400 font-semibold">Pendentes de Validação</span>
-                    <h2 class="text-3xl font-extrabold text-amber-400 mt-2" id="pendingCount">0</h2>
+    <!-- CONTEÚDO DO PAINEL (Oculto até autenticar com sucesso) -->
+    <div id="adminContent" class="hidden flex-grow flex flex-col justify-between">
+        <!-- Header do Painel -->
+        <header class="bg-gray-950 border-b border-gray-800 px-6 py-4">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <img src="logo.png" alt="Logo" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="font-bold text-lg text-white">Painel Administrativo</h1>
+                        <span class="text-xs text-amber-400">Team Vasconcelos</span>
+                    </div>
                 </div>
-                <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
-                    <span class="text-xs uppercase text-gray-400 font-semibold">Postados no Site</span>
-                    <h2 class="text-3xl font-extrabold text-emerald-400 mt-2" id="approvedCount">0</h2>
-                </div>
-                <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
-                    <span class="text-xs uppercase text-gray-400 font-semibold">Total Registados</span>
-                    <h2 class="text-3xl font-extrabold text-blue-400 mt-2" id="totalCount">0</h2>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" target="_blank" class="text-sm bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-300 px-4 py-2 rounded-xl transition">Ver Site Principal</a>
+                    <button onclick="logout()" class="bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer">Sair</button>
                 </div>
             </div>
+        </header>
 
-            <!-- Bloco Pendentes -->
-            <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
-                <h3 class="text-xl font-bold text-white mb-2">Relatos Pendentes</h3>
-                <p class="text-sm text-gray-400 mb-6">Aprove ou exclua os relatos enviados pelos alunos no site.</p>
-                <div id="pendingList" class="space-y-4">
-                    <!-- Preenchido Dinamicamente via Firebase -->
+        <!-- Navegação por Abas -->
+        <div class="bg-gray-950/50 px-6">
+            <div class="max-w-7xl mx-auto flex gap-4 overflow-x-auto border-b border-gray-800">
+                <button onclick="switchTab('depoimentos')" id="tabBtn-depoimentos" class="py-4 px-4 font-bold text-sm border-b-2 -mb-[1px] border-amber-400 text-amber-400 transition whitespace-nowrap cursor-pointer">Depoimentos</button>
+                <button onclick="switchTab('carrossel')" id="tabBtn-carrossel" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Gestão de Carrossel</button>
+                <button onclick="switchTab('planilhas')" id="tabBtn-planilhas" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Planilhas de Treino</button>
+                <button onclick="switchTab('conteudo')" id="tabBtn-conteudo" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Conteúdo do Site (Quem Sou Eu)</button>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <main class="max-w-7xl mx-auto w-full px-6 py-10 flex-grow">
+
+            <!-- ABA 1: DEPOIMENTOS -->
+            <section id="section-depoimentos" class="space-y-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
+                        <span class="text-xs uppercase text-gray-400 font-semibold">Pendentes de Validação</span>
+                        <h2 class="text-3xl font-extrabold text-amber-400 mt-2" id="pendingCount">0</h2>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
+                        <span class="text-xs uppercase text-gray-400 font-semibold">Postados no Site</span>
+                        <h2 class="text-3xl font-extrabold text-emerald-400 mt-2" id="approvedCount">0</h2>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
+                        <span class="text-xs uppercase text-gray-400 font-semibold">Total Registados</span>
+                        <h2 class="text-3xl font-extrabold text-blue-400 mt-2" id="totalCount">0</h2>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Bloco Postados -->
-            <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
-                <h3 class="text-xl font-bold text-white mb-2">Relatos Postados no Site</h3>
-                <p class="text-sm text-gray-400 mb-6">Depoimentos visíveis publicamente na landing page.</p>
-                <div id="approvedList" class="space-y-4">
-                    <!-- Preenchido Dinamicamente via Firebase -->
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
+                    <h3 class="text-xl font-bold text-white mb-2">Relatos Pendentes</h3>
+                    <p class="text-sm text-gray-400 mb-6">Aprove ou exclua os relatos enviados pelos alunos no site.</p>
+                    <div id="pendingList" class="space-y-4"></div>
                 </div>
-            </div>
-        </section>
 
-        <!-- ABA 2: GESTÃO DE CARROSSEL -->
-        <section id="section-carrossel" class="hidden space-y-8">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-950 border border-gray-800 p-6 sm:p-8 rounded-3xl">
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-1">Conjuntos de Carrosséis do Site</h3>
-                    <p class="text-sm text-gray-400">Gerencie os blocos de carrosséis. As alterações são guardadas automaticamente no Firebase.</p>
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
+                    <h3 class="text-xl font-bold text-white mb-2">Relatos Postados no Site</h3>
+                    <p class="text-sm text-gray-400 mb-6">Depoimentos visíveis publicamente na landing page.</p>
+                    <div id="approvedList" class="space-y-4"></div>
                 </div>
-                <button type="button" onclick="addNewCarouselGroup()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-5 py-3 rounded-xl text-sm transition shadow-lg cursor-pointer whitespace-nowrap">+ Novo Conjunto de Carrossel</button>
-            </div>
+            </section>
 
-            <div id="carouselGroupsContainer" class="space-y-6">
-                <!-- Preenchido Dinamicamente -->
-            </div>
-        </section>
+            <!-- ABA 2: GESTÃO DE CARROSSEL -->
+            <section id="section-carrossel" class="hidden space-y-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-950 border border-gray-800 p-6 sm:p-8 rounded-3xl">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-1">Conjuntos de Carrosséis do Site</h3>
+                        <p class="text-sm text-gray-400">Gerencie os blocos de carrosséis. As alterações são guardadas automaticamente no Firebase.</p>
+                    </div>
+                    <button type="button" onclick="addNewCarouselGroup()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-5 py-3 rounded-xl text-sm transition shadow-lg cursor-pointer whitespace-nowrap">+ Novo Conjunto de Carrossel</button>
+                </div>
+                <div id="carouselGroupsContainer" class="space-y-6"></div>
+            </section>
 
-        <!-- ABA 3: PLANILHAS DE TREINO -->
-        <section id="section-planilhas" class="hidden space-y-8">
-            <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
-                <h3 class="text-xl font-bold text-white mb-2">Adicionar Nova Planilha de Treino</h3>
-                <p class="text-sm text-gray-400 mb-6">Registe uma nova planilha pronta para disponibilizar aos alunos.</p>
-                
-                <form onsubmit="addNewSpreadsheet(event)" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Nome da Planilha</label>
-                            <input type="text" id="newSpreadsheetName" placeholder="Ex: Guia de Hipertrofia" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+            <!-- ABA 3: PLANILHAS DE TREINO -->
+            <section id="section-planilhas" class="hidden space-y-8">
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
+                    <h3 class="text-xl font-bold text-white mb-2">Adicionar Nova Planilha de Treino</h3>
+                    <p class="text-sm text-gray-400 mb-6">Registe uma nova planilha pronta para disponibilizar aos alunos.</p>
+                    
+                    <form onsubmit="addNewSpreadsheet(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Nome da Planilha</label>
+                                <input type="text" id="newSpreadsheetName" placeholder="Ex: Guia de Hipertrofia" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Valor (Ex: R$ 29,90)</label>
+                                <input type="text" id="newSpreadsheetValue" placeholder="R$ 29,90" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Ficheiro PDF</label>
+                                <input type="file" id="newSpreadsheetFile" accept=".pdf" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 file:mr-4 file:py-1 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-gray-950 hover:file:bg-amber-600 cursor-pointer">
+                            </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Valor (Ex: R$ 29,90)</label>
-                            <input type="text" id="newSpreadsheetValue" placeholder="R$ 29,90" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Descrição</label>
+                            <textarea id="newSpreadsheetDesc" rows="3" placeholder="Descreva brevemente o conteúdo da planilha..." required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Ficheiro PDF</label>
-                            <input type="file" id="newSpreadsheetFile" accept=".pdf" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 file:mr-4 file:py-1 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-gray-950 hover:file:bg-amber-600 cursor-pointer">
+                            <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-8 py-3.5 rounded-xl transition shadow-xl text-sm cursor-pointer">+ Guardar e Adicionar Planilha</button>
                         </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Descrição</label>
-                        <textarea id="newSpreadsheetDesc" rows="3" placeholder="Descreva brevemente o conteúdo da planilha..." required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
-                    </div>
-                    <div>
-                        <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-8 py-3.5 rounded-xl transition shadow-xl text-sm cursor-pointer">+ Guardar e Adicionar Planilha</button>
-                    </div>
-                </form>
-            </div>
-
-            <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
-                <h3 class="text-xl font-bold text-white mb-2">Planilhas Atuais Registadas</h3>
-                <p class="text-sm text-gray-400 mb-6">Lista de planilhas disponíveis no sistema.</p>
-                
-                <div id="spreadsheetsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Preenchido Dinamicamente -->
+                    </form>
                 </div>
-            </div>
-        </section>
 
-        <!-- ABA 4: CONTEÚDO DO SITE -->
-        <section id="section-conteudo" class="hidden space-y-8">
-            <!-- Textos da Bio -->
-            <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-1">Textos da Secção "Quem Sou Eu"</h3>
-                    <p class="text-sm text-gray-400">As alterações são guardadas automaticamente ao sair de cada campo.</p>
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
+                    <h3 class="text-xl font-bold text-white mb-2">Planilhas Atuais Registadas</h3>
+                    <p class="text-sm text-gray-400 mb-6">Lista de planilhas disponíveis no sistema.</p>
+                    <div id="spreadsheetsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
-                <div class="space-y-6">
+            </section>
+
+            <!-- ABA 4: CONTEÚDO DO SITE -->
+            <section id="section-conteudo" class="hidden space-y-8">
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Parágrafo 1</label>
-                        <textarea id="contentP1" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                        <h3 class="text-xl font-bold text-white mb-1">Textos da Secção "Quem Sou Eu"</h3>
+                        <p class="text-sm text-gray-400">As alterações são guardadas automaticamente ao sair de cada campo.</p>
                     </div>
-                    <div>
-                        <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Parágrafo 2</label>
-                        <textarea id="contentP2" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-6">
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Anos no Fisiculturismo</label>
-                            <input type="text" id="contentFisiculturismo" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Parágrafo 1</label>
+                            <textarea id="contentP1" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Evolução de Peso</label>
-                            <input type="text" id="contentPeso" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Parágrafo 2</label>
+                            <textarea id="contentP2" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Anos no Fisiculturismo</label>
+                                <input type="text" id="contentFisiculturismo" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Evolução de Peso</label>
+                                <input type="text" id="contentPeso" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Filosofia de Treino (Citação)</label>
+                            <textarea id="contentCitacao" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
                         </div>
                     </div>
+                </div>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
                     <div>
-                        <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Filosofia de Treino (Citação)</label>
-                        <textarea id="contentCitacao" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                        <h3 class="text-xl font-bold text-white mb-1">Ordem de Exibição das Secções no Site</h3>
+                        <p class="text-sm text-gray-400">Ajuste a posição em que cada secção aparece na página principal.</p>
                     </div>
+                    <div id="sectionsOrderContainer" class="space-y-3"></div>
                 </div>
-            </div>
+            </section>
+        </main>
 
-            <!-- Ajustar Ordem das Secções do Site -->
-            <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
-                <div>
-                    <h3 class="text-xl font-bold text-white mb-1">Ordem de Exibição das Secções no Site</h3>
-                    <p class="text-sm text-gray-400">Ajuste a posição em que cada secção aparece na página principal. A ordem é guardada automaticamente.</p>
-                </div>
-                <div id="sectionsOrderContainer" class="space-y-3">
-                    <!-- Preenchido Dinamicamente -->
-                </div>
-            </div>
-        </section>
+        <footer class="bg-gray-950 border-t border-gray-800 py-6 text-center text-xs text-gray-500">
+            <p>&copy; 2026 Team Vasconcelos - Painel Administrativo</p>
+        </footer>
+    </div>
 
-    </main>
-
-    <!-- MODAL DE EDIÇÃO DE ITEM DO CARROSSEL -->
+    <!-- MODAIS DE SUPORTE -->
     <div id="editCarouselModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl">
             <button onclick="closeEditCarouselModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
@@ -206,7 +220,6 @@
         </div>
     </div>
 
-    <!-- MODAL DE EDIÇÃO DE PLANILHA -->
     <div id="editSpreadsheetModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full relative shadow-2xl">
             <button onclick="closeEditSpreadsheetModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
@@ -236,21 +249,15 @@
         </div>
     </div>
 
-    <!-- TOAST DE SALVAMENTO AUTOMÁTICO -->
     <div id="autoSaveToast" class="hidden fixed bottom-6 right-6 bg-emerald-500 text-gray-950 font-bold px-4 py-2 rounded-xl shadow-2xl z-50 text-xs transition-all duration-300">
         Alterações salvas automaticamente ✓
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-950 border-t border-gray-800 py-6 text-center text-xs text-gray-500">
-        <p>&copy; 2026 Team Vasconcelos - Painel Administrativo</p>
-        <p class="text-gray-600 mt-1">Powered by <a href="https://www.instagram.com/cs_code_solutions?stkn=Ym1mNDMzYTYxa3d6" target="_blank" class="text-gray-400 hover:text-amber-400 transition">CS code Solutions</a></p>
-    </footer>
-
-    <!-- Script Firebase e Lógica Administrativa -->
+    <!-- SCRIPT FIREBASE, AUTENTICAÇÃO GOOGLE E LÓGICA DO PAINEL -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDsoyXz4x2BGXHmm-iPb56fn6K07AXOgSY",
@@ -263,6 +270,8 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
         const defaultSections = [
             { id: 'historia', name: 'Quem Sou Eu (Minha História)' },
@@ -273,13 +282,77 @@
             { id: 'duvidas', name: 'Tirar Dúvidas / FAQ' }
         ];
 
-        document.addEventListener("DOMContentLoaded", async function() {
+        // Função de Login Google
+        window.loginGoogle = async function() {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                const autorizado = await verificarPermissaoAdmin(user.email);
+                if (!autorizado) {
+                    await signOut(auth);
+                    alert("Acesso negado: Este e-mail não tem permissão para aceder ao painel administrativo.");
+                }
+            } catch (error) {
+                alert("Erro ao autenticar com o Google: " + error.message);
+            }
+        };
+
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Erro ao sair:", error);
+            }
+        };
+
+        // Verificação de permissões no Firestore (siteConfig/admins)
+        async function verificarPermissaoAdmin(email) {
+            try {
+                const docRef = doc(db, "siteConfig", "admins");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const emails = docSnap.data().emails || [];
+                    return emails.includes(email);
+                } else {
+                    // Se o documento ainda não existir, cria automaticamente com o e-mail atual logado
+                    await setDoc(docRef, { emails: [email] });
+                    return true;
+                }
+            } catch (err) {
+                console.error("Erro ao verificar permissões:", err);
+                return false;
+            }
+        }
+
+        // Monitor de Sessão em tempo real
+        onAuthStateChanged(auth, async (user) => {
+            const loginContainer = document.getElementById('loginContainer');
+            const adminContent = document.getElementById('adminContent');
+
+            if (user) {
+                const autorizado = await verificarPermissaoAdmin(user.email);
+                if (autorizado) {
+                    if (loginContainer) loginContainer.classList.add('hidden');
+                    if (adminContent) adminContent.classList.remove('hidden');
+                    initAdminData();
+                } else {
+                    await signOut(auth);
+                    if (loginContainer) loginContainer.classList.remove('hidden');
+                    if (adminContent) adminContent.classList.add('hidden');
+                }
+            } else {
+                if (loginContainer) loginContainer.classList.remove('hidden');
+                if (adminContent) adminContent.classList.add('hidden');
+            }
+        });
+
+        async function initAdminData() {
             await loadBioContent();
             await loadCarouselContent();
             await loadFirebaseTestimonials();
             await loadSpreadsheets();
             await loadSectionsOrder();
-        });
+        }
 
         window.switchTab = function(tabName) {
             ['depoimentos', 'carrossel', 'planilhas', 'conteudo'].forEach(t => {
@@ -308,21 +381,7 @@
                 approvedList.innerHTML = '';
 
                 if (querySnapshot.empty) {
-                    await addDoc(collection(db, "testimonials"), {
-                        name: "Carlos Alberto",
-                        service: "Treinamento Presencial",
-                        message: "O Diego puxa mesmo nos treinos presenciais! A minha postura e força mudaram 100% em poucas semanas.",
-                        status: "pendente",
-                        date: "07/10/2026"
-                    });
-                    await addDoc(collection(db, "testimonials"), {
-                        name: "Lucas & Camila",
-                        service: "Consultoria Online",
-                        message: "Treinamos em casal com o Diego e a energia é fantástica! Além de focar na nossa evolução, a dieta de brinde ajudou demais na nossa reeducação alimentar.",
-                        status: "aprovado",
-                        date: "06/10/2026"
-                    });
-                    return loadFirebaseTestimonials();
+                    return;
                 }
 
                 querySnapshot.forEach((docSnap) => {
@@ -528,12 +587,6 @@
                     document.getElementById('contentFisiculturismo').value = bio.fisiculturismo || "6 Anos";
                     document.getElementById('contentPeso').value = bio.peso || "94kg → 68kg";
                     document.getElementById('contentCitacao').value = bio.citacao || "";
-                } else {
-                    document.getElementById('contentP1').value = "A minha história começou aos 31 anos, trabalhando 10 horas sentado num escritório e tendo apenas o futebol como atividade física. Decidi mudar quando o peso na balança chegou aos 94kg e percebi que já não me reconhecia no espelho.";
-                    document.getElementById('contentP2').value = "Com muita persistência — porque quem passa por isso sabe o quão difícil é começar a alimentar-se de forma saudável —, consegui chegar aos 68kg. Foi nessa fase de emagrecimento que conheci o fisiculturismo, um esporte que me deu disciplina, foco e o desejo genuíno de ajudar outras pessoas a alcançarem os seus objetivos.";
-                    document.getElementById('contentFisiculturismo').value = "6 Anos";
-                    document.getElementById('contentPeso').value = "94kg → 68kg";
-                    document.getElementById('contentCitacao').value = '"A melhor versão é a que eu vivo hoje, mas sem as versões anteriores eu jamais teria feito as escolhas que me fizeram acreditar que eu podia. E que posso, ser sempre uma versão melhorada de mim mesmo. Isso que levo sempre para meus alunos, que eles podem chegar onde quiserem."';
                 }
             } catch (err) {
                 console.error("Erro ao carregar conteúdo da bio:", err);
@@ -640,25 +693,7 @@
                     const data = carouselDoc.data();
                     if (data.groups && Array.isArray(data.groups)) {
                         groups = data.groups;
-                    } else if (data.items) {
-                        groups = [{
-                            title: data.title || "Conheça o Método Transformação de Elite",
-                            desc: data.desc || "Acompanhe as imagens abaixo para entender como funciona o nosso método de acompanhamento.",
-                            items: data.items
-                        }];
                     }
-                }
-
-                if (groups.length === 0) {
-                    let defaultItems = [];
-                    for (let i = 1; i <= 9; i++) {
-                        defaultItems.push({ image: `_metodo-${i}.jpg`, time: 6 });
-                    }
-                    groups.push({
-                        title: "Conheça o Método Transformação de Elite",
-                        desc: "Acompanhe as imagens abaixo para entender como funciona o nosso método de acompanhamento.",
-                        items: defaultItems
-                    });
                 }
 
                 renderCarouselGroups(groups);
@@ -714,7 +749,6 @@
             }
 
             groupDiv.innerHTML = `
-                <!-- CABEÇALHO MINIMIZADO (CAPA) -->
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div class="flex items-center gap-4">
                         <span class="bg-amber-500 text-gray-950 font-extrabold w-8 h-8 rounded-xl flex items-center justify-center text-sm group-index-badge">1</span>
@@ -734,7 +768,6 @@
                     </div>
                 </div>
 
-                <!-- CORPO DE EDIÇÃO EXPANSÍVEL -->
                 <div class="group-editor-body ${startOpen ? '' : 'hidden'} space-y-6 pt-6 border-t border-gray-800">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -746,7 +779,6 @@
                             <input type="text" value="${group.desc || ''}" oninput="updateGroupHeaderPreview(this)" onblur="triggerAutoSaveCarousels()" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 group-desc-input">
                         </div>
                     </div>
-
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <span class="text-xs uppercase font-bold text-gray-400 tracking-wider">Imagens deste Conjunto</span>
@@ -758,7 +790,6 @@
                     </div>
                 </div>
             `;
-
             return groupDiv;
         }
 
