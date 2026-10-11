@@ -100,7 +100,7 @@
             </div>
         </section>
 
-        <!-- SECÇÃO: MODALIDADES (DINÂMICO) -->
+        <!-- SECÇÃO: MODALIDADES -->
         <section id="modalidades" data-section-id="modalidades" class="py-6 space-y-6">
             <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-8 space-y-2">
@@ -264,7 +264,10 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        let activePixKey = "83430164087"; // Valor padrão inicial
+
         document.addEventListener("DOMContentLoaded", async function() {
+            await loadPublicPixKey();
             await loadPublicBio();
             await loadPublicModalidades();
             await loadPublicCarousels();
@@ -272,6 +275,17 @@
             await loadPublicSpreadsheets();
             await applySectionsOrder();
         });
+
+        async function loadPublicPixKey() {
+            try {
+                const docSnap = await getDoc(doc(db, "siteConfig", "pixKey"));
+                if (docSnap.exists() && docSnap.data().key) {
+                    activePixKey = docSnap.data().key;
+                }
+            } catch (err) {
+                console.error("Erro ao carregar chave Pix pública:", err);
+            }
+        }
 
         async function applySectionsOrder() {
             try {
@@ -564,13 +578,14 @@
             document.getElementById('pixModalTitle').textContent = selectedSpreadsheetName;
             document.getElementById('pixModalPrice').textContent = selectedSpreadsheetPrice;
 
-            const qrData = encodeURIComponent(`Planilha: ${selectedSpreadsheetName} | Valor: ${selectedSpreadsheetPrice}`);
+            // Gera o QR Code utilizando a chave Pix ativa do painel, o nome da planilha e o valor correto
+            const qrData = encodeURIComponent(`Chave Pix: ${activePixKey} | Planilha: ${selectedSpreadsheetName} | Valor: ${selectedSpreadsheetPrice}`);
             const qrImg = document.getElementById('pixQrCodeImg');
             if (qrImg) {
                 qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${qrData}`;
             }
 
-            const message = encodeURIComponent(`Olá Diego, acabei de efetuar o pagamento Pix da planilha "${selectedSpreadsheetName}" no valor de ${selectedSpreadsheetPrice} e envio aqui o comprovante pix!`);
+            const message = encodeURIComponent(`Olá Diego, acabei de efetuar o pagamento Pix para a chave ${activePixKey} referente à planilha "${selectedSpreadsheetName}" no valor de ${selectedSpreadsheetPrice} e envio aqui o comprovante pix!`);
             document.getElementById('whatsappPixLink').href = `https://wa.me/5551980161186?text=${message}`;
             document.getElementById('pixModal').classList.remove('hidden');
         }
