@@ -190,9 +190,9 @@
         </div>
     </div>
 
-    <!-- SEGUNDA MODAL: QR CODE PIX E COMPROVANTE VIA WHATSAPP -->
+    <!-- SEGUNDA MODAL: QR CODE PIX, COPIA E COLA E COMPROVANTE VIA WHATSAPP -->
     <div id="pixModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl space-y-5 text-center">
+        <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl space-y-4 text-center">
             <button onclick="closePixModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
             <div>
                 <span class="bg-emerald-500/15 text-emerald-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-emerald-500/30">Pagamento Pix</span>
@@ -200,12 +200,19 @@
                 <p class="text-amber-400 font-extrabold text-2xl mt-1" id="pixModalPrice">R$ 29,90</p>
             </div>
             <div class="bg-white p-3 rounded-2xl inline-block shadow-inner">
-                <img id="pixQrCodeImg" src="" alt="QR Code Pix" class="w-40 h-40 mx-auto object-contain">
+                <img id="pixQrCodeImg" src="" alt="QR Code Pix" class="w-36 h-36 mx-auto object-contain">
             </div>
-            <p class="text-gray-300 text-xs sm:text-sm leading-relaxed">
-                Escaneie o QR Code acima com o aplicativo do seu banco para efetuar o pagamento.
+            <p class="text-gray-300 text-xs leading-relaxed">
+                Escaneie o QR Code ou copie a chave Pix abaixo para efetuar o pagamento:
             </p>
-            <div class="pt-2">
+
+            <!-- CAMPO PIX COPIA E COLA / CHAVE PIX -->
+            <div class="flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-xl p-2">
+                <input type="text" id="pixKeyInput" readonly class="w-full bg-transparent text-gray-200 text-xs px-2 focus:outline-none select-all font-mono">
+                <button type="button" onclick="copyPixKey()" id="copyPixBtn" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">Copiar Chave</button>
+            </div>
+
+            <div class="pt-1">
                 <a id="whatsappPixLink" href="#" target="_blank" class="block w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-extrabold py-3.5 rounded-xl transition shadow-lg text-sm">
                     Concluir via WhatsApp com comprovante pix 📱
                 </a>
@@ -578,7 +585,20 @@
             document.getElementById('pixModalTitle').textContent = selectedSpreadsheetName;
             document.getElementById('pixModalPrice').textContent = selectedSpreadsheetPrice;
 
-            // Gera o QR Code utilizando a chave Pix ativa do painel, o nome da planilha e o valor correto
+            // Insere a chave Pix ativa no campo copia e cola
+            const pixInput = document.getElementById('pixKeyInput');
+            if (pixInput) {
+                pixInput.value = activePixKey;
+            }
+
+            // Restaura o botão de copiar chave
+            const copyBtn = document.getElementById('copyPixBtn');
+            if (copyBtn) {
+                copyBtn.textContent = "Copiar Chave";
+                copyBtn.className = "bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
+            }
+
+            // Gera o QR Code utilizando a chave Pix ativa do painel, o nome da planilha e o valor correto da planilha
             const qrData = encodeURIComponent(`Chave Pix: ${activePixKey} | Planilha: ${selectedSpreadsheetName} | Valor: ${selectedSpreadsheetPrice}`);
             const qrImg = document.getElementById('pixQrCodeImg');
             if (qrImg) {
@@ -588,6 +608,27 @@
             const message = encodeURIComponent(`Olá Diego, acabei de efetuar o pagamento Pix para a chave ${activePixKey} referente à planilha "${selectedSpreadsheetName}" no valor de ${selectedSpreadsheetPrice} e envio aqui o comprovante pix!`);
             document.getElementById('whatsappPixLink').href = `https://wa.me/5551980161186?text=${message}`;
             document.getElementById('pixModal').classList.remove('hidden');
+        }
+
+        window.copyPixKey = function() {
+            const pixInput = document.getElementById('pixKeyInput');
+            const copyBtn = document.getElementById('copyPixBtn');
+            if (!pixInput) return;
+
+            pixInput.select();
+            pixInput.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(pixInput.value).then(() => {
+                copyBtn.textContent = "Copiado! ✓";
+                copyBtn.className = "bg-emerald-500 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
+                
+                setTimeout(() => {
+                    copyBtn.textContent = "Copiar Chave";
+                    copyBtn.className = "bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
+                }, 3000);
+            }).catch(err => {
+                alert('Erro ao copiar chave Pix: ' + err);
+            });
         }
 
         window.closePixModal = function() {
