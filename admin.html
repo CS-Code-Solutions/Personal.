@@ -61,7 +61,7 @@
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-gray-950">
 
-    <!-- ECRÃ DE LOGIN COM CONTA GOOGLE (Fundo com cel.jpeg / pc.jpeg e LED interativo) -->
+    <!-- ECRÃ DE LOGIN COM CONTA GOOGLE -->
     <div id="loginContainer" class="fixed inset-0 z-50 flex items-center justify-center login-bg px-6">
         <div id="loginCard" class="led-card p-[2px] max-w-md w-full shadow-2xl">
             <div class="led-card-inner p-8 text-center space-y-6">
@@ -86,7 +86,7 @@
         </div>
     </div>
 
-    <!-- CONTEÚDO DO PAINEL (Oculto até autenticar com sucesso) -->
+    <!-- CONTEÚDO DO PAINEL -->
     <div id="adminContent" class="hidden flex-grow flex flex-col justify-between">
         <!-- Header do Painel -->
         <header class="bg-gray-950 border-b border-gray-800 px-6 py-4">
@@ -200,6 +200,7 @@
 
             <!-- ABA 4: CONTEÚDO DO SITE -->
             <section id="section-conteudo" class="hidden space-y-8">
+                <!-- Textos da Bio -->
                 <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
                     <div>
                         <h3 class="text-xl font-bold text-white mb-1">Textos da Secção "Quem Sou Eu"</h3>
@@ -231,6 +232,58 @@
                     </div>
                 </div>
 
+                <!-- Formas de Treino / Modalidades -->
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-1">Formas de Treino (Modalidades)</h3>
+                        <p class="text-sm text-gray-400">Edite os títulos, descrições, benefícios e textos dos botões das modalidades. Salvo automaticamente.</p>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Consultoria Online -->
+                        <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4">
+                            <h4 class="font-bold text-amber-400 text-base">Consultoria Online</h4>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Título</label>
+                                <input type="text" id="onlineTitle" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Descrição</label>
+                                <textarea id="onlineDesc" rows="3" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Benefícios (Um por linha)</label>
+                                <textarea id="onlineItems" rows="3" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" placeholder="- Item 1&#10;- Item 2"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Texto do Botão</label>
+                                <input type="text" id="onlineBtn" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                        </div>
+
+                        <!-- Treinamento Presencial -->
+                        <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4">
+                            <h4 class="font-bold text-amber-400 text-base">Treinamento Presencial</h4>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Título</label>
+                                <input type="text" id="presencialTitle" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Descrição</label>
+                                <textarea id="presencialDesc" rows="3" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Benefícios (Um por linha)</label>
+                                <textarea id="presencialItems" rows="3" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" placeholder="- Item 1&#10;- Item 2"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Texto do Botão</label>
+                                <input type="text" id="presencialBtn" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ordem das Secções -->
                 <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
                     <div>
                         <h3 class="text-xl font-bold text-white mb-1">Ordem de Exibição das Secções no Site</h3>
@@ -412,6 +465,7 @@
 
         async function initAdminData() {
             await loadBioContent();
+            await loadModalidadesContent();
             await loadCarouselContent();
             await loadFirebaseTestimonials();
             await loadSpreadsheets();
@@ -667,6 +721,52 @@
                 showToast();
             } catch (error) {
                 console.error('Erro ao auto-guardar conteúdo:', error.message);
+            }
+        }
+
+        // Auto-Save Modalidades (Formas de Treino)
+        async function loadModalidadesContent() {
+            try {
+                const docSnap = await getDoc(doc(db, "siteConfig", "modalidades"));
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.online) {
+                        document.getElementById('onlineTitle').value = data.online.title || "";
+                        document.getElementById('onlineDesc').value = data.online.desc || "";
+                        document.getElementById('onlineItems').value = (data.online.items || []).join('\n');
+                        document.getElementById('onlineBtn').value = data.online.btn || "";
+                    }
+                    if (data.presencial) {
+                        document.getElementById('presencialTitle').value = data.presencial.title || "";
+                        document.getElementById('presencialDesc').value = data.presencial.desc || "";
+                        document.getElementById('presencialItems').value = (data.presencial.items || []).join('\n');
+                        document.getElementById('presencialBtn').value = data.presencial.btn || "";
+                    }
+                }
+            } catch (err) {
+                console.error("Erro ao carregar modalidades:", err);
+            }
+        }
+
+        window.autoSaveModalidades = async function() {
+            const online = {
+                title: document.getElementById('onlineTitle').value,
+                desc: document.getElementById('onlineDesc').value,
+                items: document.getElementById('onlineItems').value.split('\n').filter(i => i.trim() !== ''),
+                btn: document.getElementById('onlineBtn').value
+            };
+            const presencial = {
+                title: document.getElementById('presencialTitle').value,
+                desc: document.getElementById('presencialDesc').value,
+                items: document.getElementById('presencialItems').value.split('\n').filter(i => i.trim() !== ''),
+                btn: document.getElementById('presencialBtn').value
+            };
+
+            try {
+                await setDoc(doc(db, "siteConfig", "modalidades"), { online, presencial });
+                showToast();
+            } catch (error) {
+                console.error('Erro ao auto-guardar modalidades:', error.message);
             }
         }
 
