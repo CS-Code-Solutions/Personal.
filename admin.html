@@ -14,30 +14,75 @@
         ::-webkit-scrollbar-track { background: #030712; }
         ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+        /* Fundo responsivo para a tela de login */
+        .login-bg {
+            background: linear-gradient(rgba(3, 7, 18, 0.75), rgba(3, 7, 18, 0.9)), url('cel.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+        @media (min-width: 768px) {
+            .login-bg {
+                background: linear-gradient(rgba(3, 7, 18, 0.75), rgba(3, 7, 18, 0.9)), url('pc.jpeg');
+                background-size: cover;
+                background-position: center;
+            }
+        }
+
+        /* Efeito de LED reativo ao rato/toque na caixa de login */
+        .led-card {
+            position: relative;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+        .led-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: radial-gradient(
+                350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(245, 158, 11, 0.95),
+                rgba(245, 158, 11, 0.3) 45%,
+                rgba(245, 158, 11, 0.05) 70%,
+                transparent 90%
+            );
+            border-radius: inherit;
+            z-index: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .led-card-inner {
+            position: relative;
+            background: #090d16;
+            border-radius: calc(1.5rem - 2px);
+            z-index: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-gray-950">
 
-    <!-- ECRÃ DE LOGIN COM CONTA GOOGLE -->
-    <div id="loginContainer" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-950 px-6">
-        <div class="bg-gray-900 border border-gray-800 p-8 rounded-3xl max-w-md w-full text-center space-y-6 shadow-2xl">
-            <div class="flex justify-center">
-                <img src="logo.png" alt="Logo" class="w-20 h-20 object-contain">
+    <!-- ECRÃ DE LOGIN COM CONTA GOOGLE (Fundo com cel.jpeg / pc.jpeg e LED interativo) -->
+    <div id="loginContainer" class="fixed inset-0 z-50 flex items-center justify-center login-bg px-6">
+        <div id="loginCard" class="led-card p-[2px] max-w-md w-full shadow-2xl">
+            <div class="led-card-inner p-8 text-center space-y-6">
+                <div class="flex justify-center">
+                    <img src="logo.png" alt="Logo" class="w-20 h-20 object-contain">
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Painel Administrativo</h2>
+                    <p class="text-gray-400 text-sm mt-1">Team Vasconcelos</p>
+                </div>
+                <p class="text-gray-300 text-xs leading-relaxed">Faça login com a sua conta Google autorizada para aceder à gestão completa do site.</p>
+                <button type="button" onclick="loginGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-900 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-3 shadow-lg text-sm cursor-pointer">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.95H1.14v3.15C3.15 21.36 7.22 24 12 24z"/>
+                        <path fill="#FBBC05" d="M5.28 14.25c-.25-.72-.38-1.49-.38-2.25s.13-1.53.38-2.25V6.6H1.14C.41 8.08 0 9.75 0 12s.41 3.92 1.14 5.4l4.14-3.15z"/>
+                        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.64 1.14 6.6l4.14 3.15c.95-2.84 3.6-4.95 6.72-4.95z"/>
+                    </svg>
+                    Entrar com Google
+                </button>
             </div>
-            <div>
-                <h2 class="text-2xl font-bold text-white">Painel Administrativo</h2>
-                <p class="text-gray-400 text-sm mt-1">Team Vasconcelos</p>
-            </div>
-            <p class="text-gray-300 text-xs leading-relaxed">Faça login com a sua conta Google autorizada para aceder à gestão completa do site.</p>
-            <button type="button" onclick="loginGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-900 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-3 shadow-lg text-sm cursor-pointer">
-                <svg class="w-5 h-5" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
-                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.95H1.14v3.15C3.15 21.36 7.22 24 12 24z"/>
-                    <path fill="#FBBC05" d="M5.28 14.25c-.25-.72-.38-1.49-.38-2.25s.13-1.53.38-2.25V6.6H1.14C.41 8.08 0 9.75 0 12s.41 3.92 1.14 5.4l4.14-3.15z"/>
-                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.64 1.14 6.6l4.14 3.15c.95-2.84 3.6-4.95 6.72-4.95z"/>
-                </svg>
-                Entrar com Google
-            </button>
         </div>
     </div>
 
@@ -282,6 +327,26 @@
             { id: 'duvidas', name: 'Tirar Dúvidas / FAQ' }
         ];
 
+        // Efeito de movimento do rato/toque para o LED da caixa de login
+        const loginCard = document.getElementById('loginCard');
+        if (loginCard) {
+            loginCard.addEventListener('mousemove', (e) => {
+                const rect = loginCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                loginCard.style.setProperty('--mouse-x', `${x}px`);
+                loginCard.style.setProperty('--mouse-y', `${y}px`);
+            });
+            loginCard.addEventListener('touchmove', (e) => {
+                const rect = loginCard.getBoundingClientRect();
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                loginCard.style.setProperty('--mouse-x', `${x}px`);
+                loginCard.style.setProperty('--mouse-y', `${y}px`);
+            }, { passive: true });
+        }
+
         // Função de Login Google
         window.loginGoogle = async function() {
             try {
@@ -314,7 +379,6 @@
                     const emails = docSnap.data().emails || [];
                     return emails.includes(email);
                 } else {
-                    // Se o documento ainda não existir, cria automaticamente com o e-mail atual logado
                     await setDoc(docRef, { emails: [email] });
                     return true;
                 }
@@ -380,9 +444,7 @@
                 pendingList.innerHTML = '';
                 approvedList.innerHTML = '';
 
-                if (querySnapshot.empty) {
-                    return;
-                }
+                if (querySnapshot.empty) return;
 
                 querySnapshot.forEach((docSnap) => {
                     const t = docSnap.data();
