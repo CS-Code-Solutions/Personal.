@@ -200,6 +200,23 @@
 
             <!-- ABA 4: CONTEÚDO DO SITE -->
             <section id="section-conteudo" class="hidden space-y-8">
+                <!-- Chave Pix para Compras de Planilhas -->
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-1">Chave Pix para Venda de Planilhas</h3>
+                        <p class="text-sm text-gray-400">Defina a chave Pix que aparecerá no QR Code e nas mensagens de confirmação dos alunos.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Chave Pix Atual / Nova Chave</label>
+                            <input type="text" id="contentPixKey" placeholder="Ex: 83430164087" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <button type="button" onclick="savePixKey()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-8 py-3 rounded-xl transition shadow-lg text-sm cursor-pointer">Salvar Nova Chave Pix</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Textos da Bio -->
                 <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
                     <div>
@@ -428,6 +445,7 @@
         });
 
         async function initAdminData() {
+            await loadPixKeyContent();
             await loadBioContent();
             await loadModalidadesContent();
             await loadCarouselContent();
@@ -451,6 +469,37 @@
             setTimeout(() => {
                 toast.classList.add('hidden');
             }, 2500);
+        }
+
+        // Gestão da Chave Pix
+        async function loadPixKeyContent() {
+            try {
+                const docSnap = await getDoc(doc(db, "siteConfig", "pixKey"));
+                const input = document.getElementById('contentPixKey');
+                if (docSnap.exists() && docSnap.data().key) {
+                    input.value = docSnap.data().key;
+                } else {
+                    input.value = "83430164087"; // Chave Pix padrão solicitada
+                }
+            } catch (err) {
+                console.error("Erro ao carregar chave Pix:", err);
+                document.getElementById('contentPixKey').value = "83430164087";
+            }
+        }
+
+        window.savePixKey = async function() {
+            const key = document.getElementById('contentPixKey').value.trim();
+            if (!key) {
+                alert("Por favor, digite uma chave Pix válida.");
+                return;
+            }
+            try {
+                await setDoc(doc(db, "siteConfig", "pixKey"), { key });
+                showToast();
+                alert("Chave Pix salva com sucesso!");
+            } catch (err) {
+                alert("Erro ao salvar chave Pix: " + err.message);
+            }
         }
 
         // Depoimentos Dinâmicos com Firebase
@@ -696,7 +745,6 @@
                 if (docSnap.exists() && docSnap.data().methods) {
                     methods = docSnap.data().methods;
                 } else {
-                    // Padrão inicial caso não exista
                     methods = [
                         {
                             title: "Consultoria Online",
@@ -771,7 +819,7 @@
                     <textarea rows="3" placeholder="Descrição do novo método..." class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-desc" required></textarea>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Benefícios (Um por linha)</label>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Benefícios (Um por linha)</label>
                     <textarea rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-items" placeholder="- Benefício 1&#10;- Benefício 2" required></textarea>
                 </div>
                 <div>
