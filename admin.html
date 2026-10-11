@@ -232,54 +232,18 @@
                     </div>
                 </div>
 
-                <!-- Formas de Treino / Modalidades -->
+                <!-- Formas de Treino / Modalidades (Dinâmico com botões Salvar e Novo Método) -->
                 <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
-                    <div>
-                        <h3 class="text-xl font-bold text-white mb-1">Formas de Treino (Modalidades)</h3>
-                        <p class="text-sm text-gray-400">Edite os títulos, descrições, benefícios e textos dos botões das modalidades. Salvo automaticamente.</p>
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-1">Formas de Treino (Modalidades)</h3>
+                            <p class="text-sm text-gray-400">Edite os métodos de treino, adicione novos ou remova conforme necessário.</p>
+                        </div>
+                        <button type="button" onclick="addNewModalidadeCard()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-lg cursor-pointer whitespace-nowrap">+ Novo Método</button>
                     </div>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Consultoria Online -->
-                        <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4">
-                            <h4 class="font-bold text-amber-400 text-base">Consultoria Online</h4>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Título</label>
-                                <input type="text" id="onlineTitle" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Descrição</label>
-                                <textarea id="onlineDesc" rows="3" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Benefícios (Um por linha)</label>
-                                <textarea id="onlineItems" rows="3" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" placeholder="- Item 1&#10;- Item 2"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Texto do Botão</label>
-                                <input type="text" id="onlineBtn" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                            </div>
-                        </div>
-
-                        <!-- Treinamento Presencial -->
-                        <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4">
-                            <h4 class="font-bold text-amber-400 text-base">Treinamento Presencial</h4>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Título</label>
-                                <input type="text" id="presencialTitle" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Descrição</label>
-                                <textarea id="presencialDesc" rows="3" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Benefícios (Um por linha)</label>
-                                <textarea id="presencialItems" rows="3" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500" placeholder="- Item 1&#10;- Item 2"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Texto do Botão</label>
-                                <input type="text" id="presencialBtn" onblur="autoSaveModalidades()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500">
-                            </div>
-                        </div>
+                    
+                    <div id="modalidadesContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Carregado via JavaScript -->
                     </div>
                 </div>
 
@@ -348,7 +312,7 @@
     </div>
 
     <div id="autoSaveToast" class="hidden fixed bottom-6 right-6 bg-emerald-500 text-gray-950 font-bold px-4 py-2 rounded-xl shadow-2xl z-50 text-xs transition-all duration-300">
-        Alterações salvas automaticamente ✓
+        Alterações salvas com sucesso ✓
     </div>
 
     <!-- SCRIPT FIREBASE, AUTENTICAÇÃO GOOGLE E LÓGICA DO PAINEL -->
@@ -724,49 +688,132 @@
             }
         }
 
-        // Auto-Save Modalidades (Formas de Treino)
+        // Gestão de Modalidades / Formas de Treino Dinâmicas
         async function loadModalidadesContent() {
             try {
                 const docSnap = await getDoc(doc(db, "siteConfig", "modalidades"));
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    if (data.online) {
-                        document.getElementById('onlineTitle').value = data.online.title || "";
-                        document.getElementById('onlineDesc').value = data.online.desc || "";
-                        document.getElementById('onlineItems').value = (data.online.items || []).join('\n');
-                        document.getElementById('onlineBtn').value = data.online.btn || "";
-                    }
-                    if (data.presencial) {
-                        document.getElementById('presencialTitle').value = data.presencial.title || "";
-                        document.getElementById('presencialDesc').value = data.presencial.desc || "";
-                        document.getElementById('presencialItems').value = (data.presencial.items || []).join('\n');
-                        document.getElementById('presencialBtn').value = data.presencial.btn || "";
-                    }
+                let methods = [];
+                if (docSnap.exists() && docSnap.data().methods) {
+                    methods = docSnap.data().methods;
+                } else {
+                    // Padrão inicial caso não exista
+                    methods = [
+                        {
+                            title: "Consultoria Online",
+                            desc: "Treino de onde estiver, com planilhas e orientações elaboradas sob medida para você ou em dupla (condição especial para casal).",
+                            items: ["Treinos estruturados para sua evolução", "Plano alimentar", "Flexibilidade de horários e locais"],
+                            btn: "Tirar Dúvidas - Consultoria Online"
+                        },
+                        {
+                            title: "Treinamento Presencial",
+                            desc: "Acompanhamento hora/aula individual ou em casal, com foco total na intensidade, segurança e cobrança mensal antecipada.",
+                            items: ["Aulas individuais ou em casal", "Plano alimentar", "Pagamento facilitado via Pix ou Cartão"],
+                            btn: "Tirar Dúvidas - Treinamento Presencial"
+                        }
+                    ];
                 }
+                renderModalidades(methods);
             } catch (err) {
                 console.error("Erro ao carregar modalidades:", err);
             }
         }
 
-        window.autoSaveModalidades = async function() {
-            const online = {
-                title: document.getElementById('onlineTitle').value,
-                desc: document.getElementById('onlineDesc').value,
-                items: document.getElementById('onlineItems').value.split('\n').filter(i => i.trim() !== ''),
-                btn: document.getElementById('onlineBtn').value
-            };
-            const presencial = {
-                title: document.getElementById('presencialTitle').value,
-                desc: document.getElementById('presencialDesc').value,
-                items: document.getElementById('presencialItems').value.split('\n').filter(i => i.trim() !== ''),
-                btn: document.getElementById('presencialBtn').value
-            };
+        function renderModalidades(methods) {
+            const container = document.getElementById('modalidadesContainer');
+            container.innerHTML = '';
+
+            methods.forEach((m, index) => {
+                const itemsText = (m.items || []).join('\n');
+                const cardDiv = document.createElement('div');
+                cardDiv.className = "bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 modalidade-card";
+                cardDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-amber-400/20">Método ${index + 1}</span>
+                        <button type="button" onclick="deleteModalidadeCard(this)" class="bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Excluir Método</button>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Título</label>
+                        <input type="text" value="${m.title || ''}" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-title" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Descrição</label>
+                        <textarea rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-desc" required>${m.desc || ''}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Benefícios (Um por linha)</label>
+                        <textarea rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-items" placeholder="- Item 1&#10;- Item 2" required>${itemsText}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Texto do Botão</label>
+                        <input type="text" value="${m.btn || ''}" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-btn" required>
+                    </div>
+                    <button type="button" onclick="saveModalidadeCard(this)" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3 rounded-xl transition shadow-lg text-sm cursor-pointer mt-2">Salvar Alterações</button>
+                `;
+                container.appendChild(cardDiv);
+            });
+        }
+
+        window.addNewModalidadeCard = function() {
+            const container = document.getElementById('modalidadesContainer');
+            const tempDiv = document.createElement('div');
+            tempDiv.className = "bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 modalidade-card";
+            tempDiv.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-amber-400/20">Novo Método</span>
+                    <button type="button" onclick="deleteModalidadeCard(this)" class="bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Excluir Método</button>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Título</label>
+                    <input type="text" placeholder="Ex: Consultoria VIP" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-title" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Descrição</label>
+                    <textarea rows="3" placeholder="Descrição do novo método..." class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-desc" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Benefícios (Um por linha)</label>
+                    <textarea rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-items" placeholder="- Benefício 1&#10;- Benefício 2" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Texto do Botão</label>
+                    <input type="text" placeholder="Tirar Dúvidas - Novo Método" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-btn" required>
+                </div>
+                <button type="button" onclick="saveModalidadeCard(this)" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3 rounded-xl transition shadow-lg text-sm cursor-pointer mt-2">Salvar Alterações</button>
+            `;
+            container.appendChild(tempDiv);
+        }
+
+        window.deleteModalidadeCard = async function(btn) {
+            if (confirm('Tem certeza que deseja excluir este método?')) {
+                btn.closest('.modalidade-card').remove();
+                await persistAllModalidades();
+            }
+        }
+
+        window.saveModalidadeCard = async function(btn) {
+            await persistAllModalidades();
+            alert('Alterações salvas com sucesso!');
+        }
+
+        async function persistAllModalidades() {
+            const cards = document.querySelectorAll('.modalidade-card');
+            let methods = [];
+            cards.forEach(card => {
+                const title = card.querySelector('.m-title').value;
+                const desc = card.querySelector('.m-desc').value;
+                const itemsStr = card.querySelector('.m-items').value;
+                const items = itemsStr.split('\n').map(i => i.trim()).filter(i => i !== '');
+                const btnText = card.querySelector('.m-btn').value;
+
+                methods.push({ title, desc, items, btn: btnText });
+            });
 
             try {
-                await setDoc(doc(db, "siteConfig", "modalidades"), { online, presencial });
+                await setDoc(doc(db, "siteConfig", "modalidades"), { methods });
                 showToast();
             } catch (error) {
-                console.error('Erro ao auto-guardar modalidades:', error.message);
+                console.error('Erro ao guardar modalidades:', error.message);
+                alert('Erro ao guardar no Firebase: ' + error.message);
             }
         }
 
