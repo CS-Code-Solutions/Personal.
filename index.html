@@ -203,13 +203,13 @@
                 <img id="pixQrCodeImg" src="" alt="QR Code Pix" class="w-36 h-36 mx-auto object-contain">
             </div>
             <p class="text-gray-300 text-xs leading-relaxed">
-                Escaneie o QR Code ou copie a chave Pix abaixo para efetuar o pagamento:
+                Escaneie o QR Code ou copie o código Pix Copia e Cola abaixo para efetuar o pagamento com o valor correto:
             </p>
 
             <!-- CAMPO PIX COPIA E COLA / CHAVE PIX -->
             <div class="flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-xl p-2">
                 <input type="text" id="pixKeyInput" readonly class="w-full bg-transparent text-gray-200 text-xs px-2 focus:outline-none select-all font-mono">
-                <button type="button" onclick="copyPixKey()" id="copyPixBtn" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">Copiar Chave</button>
+                <button type="button" onclick="copyPixKey()" id="copyPixBtn" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">Copiar Pix</button>
             </div>
 
             <div class="pt-1">
@@ -580,32 +580,83 @@
             document.getElementById('spreadsheetModal').classList.add('hidden');
         }
 
+        // Funções para cálculo do Pix BR Code com valor dinâmico
+        function calcularCRC16(payload) {
+            let polinomio = 0x1021;
+            let resultado = 0xFFFF;
+            for (let i = 0; i < payload.length; i++) {
+                let c = payload.charCodeAt(i);
+                resultado ^= (c << 8);
+                for (let j = 0; j < 8; j++) {
+                    if ((resultado & 0x8000) !== 0) {
+                        resultado = ((resultado << 1) ^ polinomio) & 0xFFFF;
+                    } else {
+                        resultado = (resultado << 1) & 0xFFFF;
+                    }
+                }
+            }
+            return resultado.toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        function gerarPayloadPix(chavePix, nomeRecebedor, cidadeRecebedor, valorStr) {
+            let valorLimpo = valorStr.replace(/[^\d,.-]/g, '').replace(',', '.');
+            if (isNaN(valorLimpo) || valorLimpo === '') valorLimpo = '0.00';
+
+            const formatField = (id, value) => {
+                const len = value.length.toString().padStart(2, '0');
+                return `${id}${len}${value}`;
+            };
+
+            let gui = 'br.gov.bcb.pix';
+            let accInfo = formatField('00', gui) + formatField('01', chavePix);
+            
+            let payload = '';
+            payload += formatField('00', '01');
+            payload += formatField('26', accInfo);
+            payload += formatField('52', '0000');
+            payload += formatField('53', '986');
+            
+            if (parseFloat(valorLimpo) > 0) {
+                payload += formatField('54', Number(valorLimpo).toFixed(2));
+            }
+            
+            payload += formatField('58', 'BR');
+            payload += formatField('59', nomeRecebedor.substring(0, 25));
+            payload += formatField('60', cidadeRecebedor.substring(0, 15));
+            
+            let additionalData = formatField('05', 'PLANILHA');
+            payload += formatField('62', additionalData);
+            payload += '6304';
+            
+            let crc = calcularCRC16(payload);
+            return payload + crc;
+        }
+
         window.openPixModal = function() {
             closeSpreadsheetModal();
             document.getElementById('pixModalTitle').textContent = selectedSpreadsheetName;
             document.getElementById('pixModalPrice').textContent = selectedSpreadsheetPrice;
 
-            // Insere a chave Pix ativa no campo copia e cola
+            // Gera o payload oficial do Pix Copia e Cola contendo a chave ativa e o preço dinâmico da planilha
+            const payloadPixCompleto = gerarPayloadPix(activePixKey, "Diego Vasconcelos", "Porto Alegre", selectedSpreadsheetPrice);
+
             const pixInput = document.getElementById('pixKeyInput');
             if (pixInput) {
-                pixInput.value = activePixKey;
+                pixInput.value = payloadPixCompleto;
             }
 
-            // Restaura o botão de copiar chave
             const copyBtn = document.getElementById('copyPixBtn');
             if (copyBtn) {
-                copyBtn.textContent = "Copiar Chave";
+                copyBtn.textContent = "Copiar Pix";
                 copyBtn.className = "bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
             }
 
-            // Gera o QR Code utilizando a chave Pix ativa do painel, o nome da planilha e o valor correto da planilha
-            const qrData = encodeURIComponent(`Chave Pix: ${activePixKey} | Planilha: ${selectedSpreadsheetName} | Valor: ${selectedSpreadsheetPrice}`);
             const qrImg = document.getElementById('pixQrCodeImg');
             if (qrImg) {
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${qrData}`;
+                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(payloadPixCompleto)}`;
             }
 
-            const message = encodeURIComponent(`Olá Diego, acabei de efetuar o pagamento Pix para a chave ${activePixKey} referente à planilha "${selectedSpreadsheetName}" no valor de ${selectedSpreadsheetPrice} e envio aqui o comprovante pix!`);
+            const message = encodeURIComponent(`Olá Diego, acabei de efetuar o pagamento Pix no valor de ${selectedSpreadsheetPrice} referente à planilha "${selectedSpreadsheetName}" e envio aqui o comprovante pix!`);
             document.getElementById('whatsappPixLink').href = `https://wa.me/5551980161186?text=${message}`;
             document.getElementById('pixModal').classList.remove('hidden');
         }
@@ -623,11 +674,11 @@
                 copyBtn.className = "bg-emerald-500 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
                 
                 setTimeout(() => {
-                    copyBtn.textContent = "Copiar Chave";
+                    copyBtn.textContent = "Copiar Pix";
                     copyBtn.className = "bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
                 }, 3000);
             }).catch(err => {
-                alert('Erro ao copiar chave Pix: ' + err);
+                alert('Erro ao copiar código Pix: ' + err);
             });
         }
 
