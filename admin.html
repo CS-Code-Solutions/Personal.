@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-PT" class="scroll-smooth">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diego Vasconcelos | Personal Trainer & Consultoria</title>
+    <title>Painel Administrativo | Team Vasconcelos</title>
     <!-- Ícone da Aba do Navegador -->
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -14,253 +14,329 @@
         ::-webkit-scrollbar-track { background: #030712; }
         ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 9999px; }
         ::-webkit-scrollbar-thumb:hover { background: #374151; }
-        .hero-bg {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.85));
+
+        /* Fundo responsivo para a tela de login */
+        .login-bg {
+            background: linear-gradient(rgba(3, 7, 18, 0.75), rgba(3, 7, 18, 0.9)), url('cel.jpeg');
             background-size: cover;
             background-position: center;
         }
+        @media (min-width: 768px) {
+            .login-bg {
+                background: linear-gradient(rgba(3, 7, 18, 0.75), rgba(3, 7, 18, 0.9)), url('pc.jpeg');
+                background-size: cover;
+                background-position: center;
+            }
+        }
+
+        /* Efeito de LED reativo ao rato/toque na caixa de login */
+        .led-card {
+            position: relative;
+            border-radius: 1.5rem;
+            overflow: hidden;
+        }
+        .led-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: radial-gradient(
+                350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(245, 158, 11, 0.95),
+                rgba(245, 158, 11, 0.3) 45%,
+                rgba(245, 158, 11, 0.05) 70%,
+                transparent 90%
+            );
+            border-radius: inherit;
+            z-index: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+        .led-card-inner {
+            position: relative;
+            background: #090d16;
+            border-radius: calc(1.5rem - 2px);
+            z-index: 1;
+        }
     </style>
 </head>
-<body class="text-gray-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-gray-950 relative">
+<body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-gray-950">
 
-    <!-- FUNDO FIXO ESTÁVEL (Resolve totalmente o deslocamento no telemóvel e computador) -->
-    <div class="fixed inset-0 -z-50 bg-cover bg-center bg-no-repeat" style="background-image: url('pc.jpeg');"></div>
-
-    <!-- Hero Section com a Logo Grande e Menu Logo Abaixo -->
-    <section class="hero-bg min-h-screen flex flex-col justify-between pt-6 pb-6 px-6 text-center border-b border-gray-800/80">
-        <!-- Espaçador superior -->
-        <div></div>
-
-        <!-- Conteúdo Principal do Hero com a Logo Grande -->
-        <div class="max-w-3xl mx-auto my-auto space-y-4">
-            <div class="flex justify-center">
-                <img src="logo.png" alt="Diego Vasconcelos Team Vasconcelos" class="w-64 h-64 sm:w-[28rem] sm:h-[28rem] object-contain drop-shadow-2xl">
-            </div>
-            <span class="text-amber-400 font-semibold tracking-widest uppercase text-xs bg-amber-400/10 px-4 py-1.5 rounded-full border border-amber-400/20 inline-block drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">Transformação & Performance</span>
-            <h1 class="text-3xl md:text-5xl font-extrabold mb-3 leading-tight text-white tracking-tight drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)]">Supere Seus Limites com Acompanhamento Profissional</h1>
-            <p class="text-base md:text-lg text-gray-100 font-bold mb-6 max-w-xl mx-auto leading-relaxed drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">Treinamento presencial e consultoria online personalizados para otimizar os seus resultados, seja individualmente ou em casal.</p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#modalidades" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-8 py-3.5 rounded-xl transition shadow-xl text-base">Conhecer Modalidades</a>
-                <a href="#duvidas" class="border-2 border-amber-400 text-amber-400 hover:bg-amber-400 hover:text-gray-950 font-bold px-8 py-3.5 rounded-xl transition text-base">Tirar Dúvidas</a>
-            </div>
-        </div>
-
-        <!-- Menu de Navegação Abaixo do Hero (Em Pílula) -->
-        <nav class="max-w-4xl mx-auto w-full bg-gray-950/90 backdrop-blur border border-gray-800 rounded-2xl p-3 mt-4 flex flex-wrap justify-center gap-6 text-sm font-semibold text-gray-300">
-            <a href="#historia" class="hover:text-amber-400 transition">Minha História</a>
-            <a href="#metodo" class="hover:text-amber-400 transition">O Método</a>
-            <a href="#modalidades" class="hover:text-amber-400 transition">Modalidades</a>
-            <a href="#planilhas" class="hover:text-amber-400 transition">Planilhas</a>
-            <a href="#relatos" class="hover:text-amber-400 transition">Relatos</a>
-            <a href="#duvidas" class="text-amber-400 hover:underline">Tirar Dúvidas</a>
-        </nav>
-    </section>
-
-    <!-- Conteúdo Principal Dinâmico -->
-    <main id="mainSectionsContainer" class="max-w-7xl mx-auto w-full px-6 py-6 space-y-12 flex-grow">
-
-        <!-- SECÇÃO: MINHA HISTÓRIA / QUEM SOU EU -->
-        <section id="historia" data-section-id="historia" class="py-6 bg-gray-950/90 backdrop-blur border border-gray-800/80 rounded-3xl p-6 sm:p-10 shadow-2xl">
-            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+    <!-- ECRÃ DE LOGIN COM CONTA GOOGLE -->
+    <div id="loginContainer" class="fixed inset-0 z-50 flex items-center justify-center login-bg px-6">
+        <div id="loginCard" class="led-card p-[2px] max-w-md w-full shadow-2xl">
+            <div class="led-card-inner p-8 text-center space-y-6">
+                <div class="flex justify-center">
+                    <img src="logo.png" alt="Logo" class="w-20 h-20 object-contain">
+                </div>
                 <div>
-                    <span class="text-amber-400 font-semibold tracking-widest uppercase text-xs bg-amber-400/10 px-4 py-1.5 rounded-full border border-amber-400/20 inline-block mb-3">Quem sou eu</span>
-                    <h2 class="text-3xl font-extrabold text-white mb-1">Diego Vasconcelos</h2>
-                    <p class="text-xs font-bold text-gray-400 tracking-wider mb-5">CREF 042785-G/RS</p>
-                    <p class="text-gray-300 mb-4 leading-relaxed text-sm sm:text-base" id="siteBioP1">A minha história começou aos 31 anos, trabalhando 10 horas sentado num escritório e tendo apenas o futebol como atividade física. Decidi mudar quando o peso na balança chegou aos 94kg e percebi que já não me reconhecia no espelho.</p>
-                    <p class="text-gray-300 mb-5 leading-relaxed text-sm sm:text-base" id="siteBioP2">Com muita persistência — porque quem passa por isso sabe o quão difícil é começar a alimentar-se de forma saudável —, consegui chegar aos 68kg. Foi nessa fase de emagrecimento que conheci o fisiculturismo, um esporte que me deu disciplina, foco e o desejo genuíno de ajudar outras pessoas a alcançarem os seus objetivos.</p>
-                    <div class="flex gap-6 border-t border-gray-800 pt-5">
-                        <div>
-                            <span class="block text-2xl font-bold text-amber-400" id="siteBioFisiculturismo">6 Anos</span>
-                            <span class="text-xs text-gray-400">No Fisiculturismo</span>
-                        </div>
-                        <div>
-                            <span class="block text-2xl font-bold text-emerald-400" id="siteBioPeso">94kg → 68kg</span>
-                            <span class="text-xs text-gray-400">Minha Superação</span>
-                        </div>
-                    </div>
+                    <h2 class="text-2xl font-bold text-white">Painel Administrativo</h2>
+                    <p class="text-gray-400 text-sm mt-1">Team Vasconcelos</p>
                 </div>
-                <!-- Filosofia de Treino Estilizada -->
-                <div class="bg-gray-900/90 p-6 sm:p-8 rounded-2xl border border-gray-800 shadow-xl space-y-4">
-                    <h3 class="text-xl font-bold mb-3 text-white">Filosofia de Treino</h3>
-                    <p class="text-gray-300 mb-4 leading-relaxed italic text-sm" id="siteBioCitacao">"A melhor versão é a que eu vivo hoje, mas sem as versões anteriores eu jamais tive feito as escolhas que me fizeram acreditar que eu poderia. E que posso, ser sempre uma versão melhorada de mim mesmo. Isso que levo sempre para meus alunos, que eles podem chegar onde quiserem."</p>
-                    <ul class="space-y-2.5 text-gray-300 text-sm">
-                        <li class="flex items-center gap-3 text-amber-400">✓ <span class="text-gray-300">Empatia real com quem quer transformar o corpo</span></li>
-                        <li class="flex items-center gap-3 text-amber-400">✓ <span class="text-gray-300">Planos adaptados para indivíduos e casais</span></li>
-                        <li class="flex items-center gap-3 text-amber-400">✓ <span class="text-gray-300">Plano alimentar</span></li>
-                        <li class="flex items-center gap-3 text-amber-400">✓ <span class="text-gray-300">Suporte constante via WhatsApp</span></li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECÇÃO: O MÉTODO -->
-        <section id="metodo" data-section-id="metodo" class="py-6 space-y-6">
-            <div class="text-center">
-                <span class="text-amber-400 font-semibold tracking-widest uppercase text-xs bg-amber-400/10 px-4 py-1.5 rounded-full border border-amber-400/20 inline-block drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">Metodologia Exclusiva</span>
-            </div>
-            <div id="dynamicCarouselsContainer" class="space-y-6">
-                <!-- Preenchido via JavaScript -->
-            </div>
-        </section>
-
-        <!-- SECÇÃO: MODALIDADES -->
-        <section id="modalidades" data-section-id="modalidades" class="py-6 space-y-6">
-            <div class="max-w-6xl mx-auto">
-                <div class="text-center mb-8 space-y-2">
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)]">Escolha Como Quer Treinar</h2>
-                    <p class="text-sm font-bold text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-xl mx-auto">Opções flexíveis para se encaixar perfeitamente no seu estilo de vida e objetivos.</p>
-                </div>
-                <div id="publicModalidadesContainer" class="grid md:grid-cols-2 gap-6">
-                    <p class="text-xs text-gray-500 italic col-span-full text-center py-4">A carregar modalidades...</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECÇÃO: PLANILHAS DE TREINO -->
-        <section id="planilhas" data-section-id="planilhas" class="py-6 space-y-6">
-            <div class="max-w-6xl mx-auto">
-                <div class="text-center mb-8 space-y-2">
-                    <span class="text-amber-400 font-semibold tracking-widest uppercase text-xs bg-amber-400/10 px-4 py-1.5 rounded-full border border-amber-400/20 inline-block drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">Materiais Prontos</span>
-                    <h3 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)]">Planilhas de Treino</h3>
-                    <p class="text-sm font-bold text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] max-w-xl mx-auto">Adquira planilhas especializadas desenvolvidas para acelerar os seus ganhos.</p>
-                </div>
-                <div id="publicSpreadsheetsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <p class="text-xs text-gray-500 italic col-span-full text-center py-4">A carregar planilhas disponíveis...</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECÇÃO: RELATOS -->
-        <section id="relatos" data-section-id="relatos" class="py-6 space-y-6">
-            <div class="max-w-3xl mx-auto space-y-6 text-center">
-                <div class="space-y-2">
-                    <h3 class="text-3xl md:text-4xl font-extrabold text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)] leading-tight">Relatos de Alunas e<br>Alunos</h3>
-                    <p class="text-sm font-bold text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">Veja o que dizem quem já transformou o treino com o Team Vasconcelos.</p>
-                </div>
-                
-                <!-- Container do Carrossel de Relatos -->
-                <div class="relative bg-gray-950/90 backdrop-blur border border-gray-800 rounded-3xl p-6 sm:p-10 shadow-2xl min-h-[220px] flex flex-col justify-between text-left">
-                    <!-- Botões de Navegação (Pular / Voltar) -->
-                    <button type="button" onclick="changeTestimonialSlide(-1)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-amber-500 text-amber-400 hover:text-gray-950 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg z-30 transition border border-amber-500/30 shadow-xl cursor-pointer">&#10094;</button>
-                    <button type="button" onclick="changeTestimonialSlide(1)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/80 hover:bg-amber-500 text-amber-400 hover:text-gray-950 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg z-30 transition border border-amber-500/30 shadow-xl cursor-pointer">&#10095;</button>
-
-                    <div id="testimonialSlideContainer" class="px-6 sm:px-10 space-y-3">
-                        <p class="text-xs text-gray-500 italic text-center">A carregar relatos...</p>
-                    </div>
-
-                    <div id="testimonialCounter" class="text-xs text-gray-500 pt-4 text-center">0 / 0</div>
-                </div>
-
-                <div class="pt-1">
-                    <button onclick="openTestimonialModal()" class="inline-block border border-amber-400 text-amber-400 hover:bg-amber-400 hover:text-gray-950 font-semibold px-6 py-3 rounded-xl transition text-sm cursor-pointer shadow-lg">Deixar meu Relato / Depoimento</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECÇÃO: PRONTO PARA DAR O PRÓXIMO PASSO? -->
-        <section id="duvidas" data-section-id="duvidas" class="bg-gray-950/90 backdrop-blur border border-gray-800 rounded-3xl p-6 sm:p-10 text-center space-y-6 shadow-2xl">
-            <div class="max-w-xl mx-auto space-y-3">
-                <h3 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Pronto para dar o próximo passo?</h3>
-                <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
-                    Entre em contato agora mesmo pelo WhatsApp para tirar dúvidas, verifique disponibilidade de horários e garanta a sua vaga.
-                </p>
-            </div>
-            <div class="max-w-md mx-auto space-y-3 pt-1">
-                <a href="https://wa.me/5551980161186?text=Olá%20Diego,%20gostaria%20de%20saber%20mais%20sobre%20os%20treinos!" target="_blank" class="block w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-4 rounded-2xl transition shadow-xl text-base">
-                    Chamar no WhatsApp
-                </a>
-                <a href="https://www.instagram.com/personal_diego_vasconcelos?srtk=b2VkeHFjajF3cXZv" target="_blank" class="block w-full bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:opacity-95 text-white font-bold py-4 rounded-2xl transition shadow-xl text-base">
-                    Instagram Oficial
-                </a>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- MODAL SOBRE PLANILHA -->
-    <div id="spreadsheetModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl space-y-6">
-            <button onclick="closeSpreadsheetModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
-            <div>
-                <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-amber-400/20">Detalhes da Planilha</span>
-                <h3 class="text-2xl font-bold text-white mt-2" id="modalSpreadsheetTitle">Nome da Planilha</h3>
-                <p class="text-amber-400 font-extrabold text-xl mt-1" id="modalSpreadsheetPrice">R$ 29,90</p>
-            </div>
-            <p class="text-gray-300 text-sm leading-relaxed" id="modalSpreadsheetDesc">Descrição detalhada da planilha.</p>
-            <div class="pt-4 border-t border-gray-800 flex gap-3">
-                <button type="button" onclick="openPixModal()" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl transition shadow-lg text-sm cursor-pointer">Comprar</button>
+                <p class="text-gray-300 text-xs leading-relaxed">Faça login com a sua conta Google autorizada para aceder à gestão completa do site.</p>
+                <button type="button" onclick="loginGoogle()" class="w-full bg-white hover:bg-gray-100 text-gray-900 font-bold py-3.5 rounded-xl transition flex items-center justify-center gap-3 shadow-lg text-sm cursor-pointer">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                        <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.95H1.14v3.15C3.15 21.36 7.22 24 12 24z"/>
+                        <path fill="#FBBC05" d="M5.28 14.25c-.25-.72-.38-1.49-.38-2.25s.13-1.53.38-2.25V6.6H1.14C.41 8.08 0 9.75 0 12s.41 3.92 1.14 5.4l4.14-3.15z"/>
+                        <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.64 1.14 6.6l4.14 3.15c.95-2.84 3.6-4.95 6.72-4.95z"/>
+                    </svg>
+                    Entrar com Google
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- SEGUNDA MODAL: QR CODE PIX, COPIA E COLA E COMPROVANTE VIA WHATSAPP -->
-    <div id="pixModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl space-y-4 text-center">
-            <button onclick="closePixModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
-            <div>
-                <span class="bg-emerald-500/15 text-emerald-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-emerald-500/30">Pagamento Pix</span>
-                <h3 class="text-xl font-bold text-white mt-2" id="pixModalTitle">Nome da Planilha</h3>
-                <p class="text-amber-400 font-extrabold text-2xl mt-1" id="pixModalPrice">R$ 29,90</p>
+    <!-- CONTEÚDO DO PAINEL -->
+    <div id="adminContent" class="hidden flex-grow flex flex-col justify-between">
+        <!-- Header do Painel -->
+        <header class="bg-gray-950 border-b border-gray-800 px-6 py-4">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <img src="logo.png" alt="Logo" class="w-10 h-10 object-contain">
+                    <div>
+                        <h1 class="font-bold text-lg text-white">Painel Administrativo</h1>
+                        <span class="text-xs text-amber-400">Team Vasconcelos</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="index.html" target="_blank" class="text-sm bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-300 px-4 py-2 rounded-xl transition">Ver Site Principal</a>
+                    <button onclick="logout()" class="bg-rose-500/10 hover:bg-rose-500 text-rose-400 hover:text-white border border-rose-500/20 text-xs font-bold px-4 py-2 rounded-xl transition cursor-pointer">Sair</button>
+                </div>
             </div>
-            <div class="bg-white p-3 rounded-2xl inline-block shadow-inner">
-                <img id="pixQrCodeImg" src="" alt="QR Code Pix" class="w-36 h-36 mx-auto object-contain">
-            </div>
-            <p class="text-gray-300 text-xs leading-relaxed">
-                Escaneie o QR Code ou copie o código Pix Copia e Cola abaixo para efetuar o pagamento com o valor correto:
-            </p>
+        </header>
 
-            <!-- CAMPO PIX COPIA E COLA / CHAVE PIX -->
-            <div class="flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-xl p-2">
-                <input type="text" id="pixKeyInput" readonly class="w-full bg-transparent text-gray-200 text-xs px-2 focus:outline-none select-all font-mono">
-                <button type="button" onclick="copyPixKey()" id="copyPixBtn" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer">Copiar Pix</button>
-            </div>
-
-            <div class="pt-1">
-                <a id="whatsappPixLink" href="#" target="_blank" class="block w-full bg-emerald-500 hover:bg-emerald-600 text-gray-950 font-extrabold py-3.5 rounded-xl transition shadow-lg text-sm">
-                    Concluir via WhatsApp com comprovante pix 📱
-                </a>
+        <!-- Navegação por Abas -->
+        <div class="bg-gray-950/50 px-6">
+            <div class="max-w-7xl mx-auto flex gap-4 overflow-x-auto border-b border-gray-800">
+                <button onclick="switchTab('depoimentos')" id="tabBtn-depoimentos" class="py-4 px-4 font-bold text-sm border-b-2 -mb-[1px] border-amber-400 text-amber-400 transition whitespace-nowrap cursor-pointer">Depoimentos</button>
+                <button onclick="switchTab('carrossel')" id="tabBtn-carrossel" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Gestão de Carrossel</button>
+                <button onclick="switchTab('planilhas')" id="tabBtn-planilhas" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Planilhas de Treino</button>
+                <button onclick="switchTab('conteudo')" id="tabBtn-conteudo" class="py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer">Conteúdo do Site (Quem Sou Eu)</button>
             </div>
         </div>
+
+        <!-- Conteúdo Principal -->
+        <main class="max-w-7xl mx-auto w-full px-6 py-10 flex-grow">
+
+            <!-- ABA 1: DEPOIMENTOS -->
+            <section id="section-depoimentos" class="space-y-8">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
+                        <span class="text-xs uppercase text-gray-400 font-semibold">Pendentes de Validação</span>
+                        <h2 class="text-3xl font-extrabold text-amber-400 mt-2" id="pendingCount">0</h2>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
+                        <span class="text-xs uppercase text-gray-400 font-semibold">Postados no Site</span>
+                        <h2 class="text-3xl font-extrabold text-emerald-400 mt-2" id="approvedCount">0</h2>
+                    </div>
+                    <div class="bg-gray-950 border border-gray-800 p-6 rounded-2xl">
+                        <span class="text-xs uppercase text-gray-400 font-semibold">Total Registados</span>
+                        <h2 class="text-3xl font-extrabold text-blue-400 mt-2" id="totalCount">0</h2>
+                    </div>
+                </div>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
+                    <h3 class="text-xl font-bold text-white mb-2">Relatos Pendentes</h3>
+                    <p class="text-sm text-gray-400 mb-6">Aprove ou exclua os relatos enviados pelos alunos no site.</p>
+                    <div id="pendingList" class="space-y-4"></div>
+                </div>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
+                    <h3 class="text-xl font-bold text-white mb-2">Relatos Postados no Site</h3>
+                    <p class="text-sm text-gray-400 mb-6">Depoimentos visíveis publicamente na landing page.</p>
+                    <div id="approvedList" class="space-y-4"></div>
+                </div>
+            </section>
+
+            <!-- ABA 2: GESTÃO DE CARROSSEL -->
+            <section id="section-carrossel" class="hidden space-y-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-950 border border-gray-800 p-6 sm:p-8 rounded-3xl">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-1">Conjuntos de Carrosséis do Site</h3>
+                        <p class="text-sm text-gray-400">Gerencie os blocos de carrosséis. As alterações são guardadas automaticamente no Firebase.</p>
+                    </div>
+                    <button type="button" onclick="addNewCarouselGroup()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-5 py-3 rounded-xl text-sm transition shadow-lg cursor-pointer whitespace-nowrap">+ Novo Conjunto de Carrossel</button>
+                </div>
+                <div id="carouselGroupsContainer" class="space-y-6"></div>
+            </section>
+
+            <!-- ABA 3: PLANILHAS DE TREINO -->
+            <section id="section-planilhas" class="hidden space-y-8">
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
+                    <h3 class="text-xl font-bold text-white mb-2">Adicionar Nova Planilha de Treino</h3>
+                    <p class="text-sm text-gray-400 mb-6">Registe uma nova planilha pronta para disponibilizar aos alunos.</p>
+                    
+                    <form onsubmit="addNewSpreadsheet(event)" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Nome da Planilha</label>
+                                <input type="text" id="newSpreadsheetName" placeholder="Ex: Guia de Hipertrofia" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Valor (Ex: R$ 29,90)</label>
+                                <input type="text" id="newSpreadsheetValue" placeholder="R$ 29,90" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Ficheiro PDF</label>
+                                <input type="file" id="newSpreadsheetFile" accept=".pdf" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 file:mr-4 file:py-1 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-gray-950 hover:file:bg-amber-600 cursor-pointer">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Descrição</label>
+                            <textarea id="newSpreadsheetDesc" rows="3" placeholder="Descreva brevemente o conteúdo da planilha..." required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-8 py-3.5 rounded-xl transition shadow-xl text-sm cursor-pointer">+ Guardar e Adicionar Planilha</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8">
+                    <h3 class="text-xl font-bold text-white mb-2">Planilhas Atuais Registadas</h3>
+                    <p class="text-sm text-gray-400 mb-6">Lista de planilhas disponíveis no sistema.</p>
+                    <div id="spreadsheetsListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                </div>
+            </section>
+
+            <!-- ABA 4: CONTEÚDO DO SITE -->
+            <section id="section-conteudo" class="hidden space-y-8">
+                <!-- Chave Pix para Compras de Planilhas -->
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-1">Chave Pix para Venda de Planilhas</h3>
+                        <p class="text-sm text-gray-400">Defina a chave Pix que aparecerá no QR Code e nas mensagens de confirmação dos alunos.</p>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Chave Pix Atual / Nova Chave</label>
+                            <input type="text" id="contentPixKey" placeholder="Ex: 83430164087" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                        </div>
+                        <div>
+                            <button type="button" onclick="savePixKey()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-8 py-3 rounded-xl transition shadow-lg text-sm cursor-pointer">Salvar Nova Chave Pix</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Textos da Bio -->
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-1">Textos da Secção "Quem Sou Eu"</h3>
+                        <p class="text-sm text-gray-400">As alterações são guardadas automaticamente ao sair de cada campo.</p>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Parágrafo 1</label>
+                            <textarea id="contentP1" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Parágrafo 2</label>
+                            <textarea id="contentP2" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Anos no Fisiculturismo</label>
+                                <input type="text" id="contentFisiculturismo" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Evolução de Peso</label>
+                                <input type="text" id="contentPeso" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Filosofia de Treino (Citação)</label>
+                            <textarea id="contentCitacao" rows="3" onblur="autoSaveContent()" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formas de Treino / Modalidades (Dinâmico com botões Salvar e Novo Método) -->
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-1">Formas de Treino (Modalidades)</h3>
+                            <p class="text-sm text-gray-400">Edite os métodos de treino, adicione novos ou remova conforme necessário.</p>
+                        </div>
+                        <button type="button" onclick="addNewModalidadeCard()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-5 py-2.5 rounded-xl text-sm transition shadow-lg cursor-pointer whitespace-nowrap">+ Novo Método</button>
+                    </div>
+                    
+                    <div id="modalidadesContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Carregado via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Ordem das Secções -->
+                <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-1">Ordem de Exibição das Secções no Site</h3>
+                        <p class="text-sm text-gray-400">Ajuste a posição em que cada secção aparece na página principal.</p>
+                    </div>
+                    <div id="sectionsOrderContainer" class="space-y-3"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="bg-gray-950 border-t border-gray-800 py-6 text-center text-xs text-gray-500">
+            <p>&copy; 2026 Team Vasconcelos - Painel Administrativo</p>
+        </footer>
     </div>
 
-    <!-- MODAL DE DEPOIMENTO -->
-    <div id="testimonialModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl">
-            <button onclick="closeTestimonialModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
-            <h3 class="text-2xl font-bold mb-2 text-white">Deixar o seu Relato</h3>
-            <p class="text-gray-400 text-sm mb-6">Partilhe a sua experiência. O depoimento será analisado antes de aparecer no site.</p>
-            <form onsubmit="submitTestimonial(event)" class="space-y-4">
+    <!-- MODAIS DE SUPORTE -->
+    <div id="editCarouselModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl">
+            <button onclick="closeEditCarouselModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
+            <h3 class="text-2xl font-bold mb-2 text-white">Editar Imagem do Carrossel</h3>
+            <form onsubmit="saveEditedCarouselItem(event)" class="space-y-4 mt-4">
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Nome Completo</label>
-                    <input type="text" id="clientName" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm" placeholder="Ex: Ana Silva">
+                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Substituir Imagem (Opcional)</label>
+                    <input type="file" id="editCarouselImageInput" accept="image/*" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Serviço Contratado</label>
-                    <select id="clientService" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm">
-                        <option value="Treinamento Presencial">Treinamento Presencial</option>
-                        <option value="Consultoria Online">Consultoria Online</option>
-                        <option value="Planilha de Treino">Planilha de Treino</option>
-                    </select>
+                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Tempo de Exibição (Segundos)</label>
+                    <input type="number" id="editCarouselTime" min="2" max="30" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">O seu Relato</label>
-                    <textarea id="clientMessage" required rows="4" class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 text-sm resize-none" placeholder="Conte como foi a sua evolução..."></textarea>
-                </div>
-                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl transition shadow-xl text-base mt-2 cursor-pointer">Enviar Depoimento</button>
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl transition shadow-xl text-base mt-2 cursor-pointer">Atualizar Imagem</button>
             </form>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-950/90 backdrop-blur border-t border-gray-800 py-6 text-center text-xs text-gray-500 space-y-1.5">
-        <p>&copy; 2026 Diego Vasconcelos Personal Trainer. Todos os direitos reservados.</p>
-        <p class="text-gray-600">Powered by <a href="https://www.instagram.com/cs_code_solutions?stkn=Ym1mNDMzYTYxa3d6" target="_blank" class="text-gray-400 hover:text-amber-400 transition">CS code Solutions</a></p>
-    </footer>
+    <div id="editSpreadsheetModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full relative shadow-2xl">
+            <button onclick="closeEditSpreadsheetModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
+            <h3 class="text-2xl font-bold mb-2 text-white">Editar Planilha de Treino</h3>
+            <form onsubmit="saveEditedSpreadsheet(event)" class="space-y-4 mt-4">
+                <input type="hidden" id="editSpreadsheetId">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Nome da Planilha</label>
+                        <input type="text" id="editSpreadsheetName" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Valor</label>
+                        <input type="text" id="editSpreadsheetValue" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Substituir PDF (Opcional)</label>
+                    <input type="file" id="editSpreadsheetFile" accept=".pdf" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Descrição</label>
+                    <textarea id="editSpreadsheetDesc" rows="3" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl transition shadow-xl text-base mt-2 cursor-pointer">Atualizar Planilha</button>
+            </form>
+        </div>
+    </div>
 
-    <!-- Script Firebase e Lógica Pública -->
+    <div id="autoSaveToast" class="hidden fixed bottom-6 right-6 bg-emerald-500 text-gray-950 font-bold px-4 py-2 rounded-xl shadow-2xl z-50 text-xs transition-all duration-300">
+        Alterações salvas com sucesso ✓
+    </div>
+
+    <!-- SCRIPT FIREBASE, AUTENTICAÇÃO GOOGLE E LÓGICA DO PAINEL -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDsoyXz4x2BGXHmm-iPb56fn6K07AXOgSY",
@@ -273,67 +349,396 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-        let activePixKey = "83430164087"; // Valor padrão inicial
+        const defaultSections = [
+            { id: 'historia', name: 'Quem Sou Eu (Minha História)' },
+            { id: 'metodo', name: 'O Método (Carrosséis)' },
+            { id: 'modalidades', name: 'Modalidades (Presencial / Online)' },
+            { id: 'planilhas', name: 'Planilhas de Treino' },
+            { id: 'relatos', name: 'Relatos e Resultados' },
+            { id: 'duvidas', name: 'Tirar Dúvidas / FAQ' }
+        ];
 
-        document.addEventListener("DOMContentLoaded", async function() {
-            await loadPublicPixKey();
-            await loadPublicBio();
-            await loadPublicModalidades();
-            await loadPublicCarousels();
-            await loadPublicTestimonials();
-            await loadPublicSpreadsheets();
-            await applySectionsOrder();
+        // Efeito de movimento do rato/toque para o LED da caixa de login
+        const loginCard = document.getElementById('loginCard');
+        if (loginCard) {
+            loginCard.addEventListener('mousemove', (e) => {
+                const rect = loginCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                loginCard.style.setProperty('--mouse-x', `${x}px`);
+                loginCard.style.setProperty('--mouse-y', `${y}px`);
+            });
+            loginCard.addEventListener('touchmove', (e) => {
+                const rect = loginCard.getBoundingClientRect();
+                const touch = e.touches[0];
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                loginCard.style.setProperty('--mouse-x', `${x}px`);
+                loginCard.style.setProperty('--mouse-y', `${y}px`);
+            }, { passive: true });
+        }
+
+        // Função de Login Google
+        window.loginGoogle = async function() {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                const autorizado = await verificarPermissaoAdmin(user.email);
+                if (!autorizado) {
+                    await signOut(auth);
+                    alert("Acesso negado: Este e-mail não tem permissão para aceder ao painel administrativo.");
+                }
+            } catch (error) {
+                alert("Erro ao autenticar com o Google: " + error.message);
+            }
+        };
+
+        window.logout = async function() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error("Erro ao sair:", error);
+            }
+        };
+
+        // Verificação de permissões no Firestore (siteConfig/admins)
+        async function verificarPermissaoAdmin(email) {
+            try {
+                const docRef = doc(db, "siteConfig", "admins");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const emails = docSnap.data().emails || [];
+                    return emails.includes(email);
+                } else {
+                    await setDoc(docRef, { emails: [email] });
+                    return true;
+                }
+            } catch (err) {
+                console.error("Erro ao verificar permissões:", err);
+                return false;
+            }
+        }
+
+        // Monitor de Sessão em tempo real
+        onAuthStateChanged(auth, async (user) => {
+            const loginContainer = document.getElementById('loginContainer');
+            const adminContent = document.getElementById('adminContent');
+
+            if (user) {
+                const autorizado = await verificarPermissaoAdmin(user.email);
+                if (autorizado) {
+                    if (loginContainer) loginContainer.classList.add('hidden');
+                    if (adminContent) adminContent.classList.remove('hidden');
+                    initAdminData();
+                } else {
+                    await signOut(auth);
+                    if (loginContainer) loginContainer.classList.remove('hidden');
+                    if (adminContent) adminContent.classList.add('hidden');
+                }
+            } else {
+                if (loginContainer) loginContainer.classList.remove('hidden');
+                if (adminContent) adminContent.classList.add('hidden');
+            }
         });
 
-        async function loadPublicPixKey() {
+        async function initAdminData() {
+            await loadPixKeyContent();
+            await loadBioContent();
+            await loadModalidadesContent();
+            await loadCarouselContent();
+            await loadFirebaseTestimonials();
+            await loadSpreadsheets();
+            await loadSectionsOrder();
+        }
+
+        window.switchTab = function(tabName) {
+            ['depoimentos', 'carrossel', 'planilhas', 'conteudo'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.add('hidden');
+                document.getElementById(`tabBtn-${t}`).className = "py-4 px-4 font-semibold text-sm border-b-2 -mb-[1px] border-transparent text-gray-400 hover:text-white transition whitespace-nowrap cursor-pointer";
+            });
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+            document.getElementById(`tabBtn-${tabName}`).className = "py-4 px-4 font-bold text-sm border-b-2 -mb-[1px] border-amber-400 text-amber-400 transition whitespace-nowrap cursor-pointer";
+        }
+
+        function showToast() {
+            const toast = document.getElementById('autoSaveToast');
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2500);
+        }
+
+        // Gestão da Chave Pix
+        async function loadPixKeyContent() {
             try {
                 const docSnap = await getDoc(doc(db, "siteConfig", "pixKey"));
+                const input = document.getElementById('contentPixKey');
                 if (docSnap.exists() && docSnap.data().key) {
-                    activePixKey = docSnap.data().key;
+                    input.value = docSnap.data().key;
+                } else {
+                    input.value = "83430164087"; // Chave Pix padrão solicitada
                 }
             } catch (err) {
-                console.error("Erro ao carregar chave Pix pública:", err);
+                console.error("Erro ao carregar chave Pix:", err);
+                document.getElementById('contentPixKey').value = "83430164087";
             }
         }
 
-        async function applySectionsOrder() {
+        window.savePixKey = async function() {
+            const key = document.getElementById('contentPixKey').value.trim();
+            if (!key) {
+                alert("Por favor, digite uma chave Pix válida.");
+                return;
+            }
             try {
-                const docSnap = await getDoc(doc(db, "siteConfig", "sectionsOrder"));
-                if (docSnap.exists() && docSnap.data().order) {
-                    const order = docSnap.data().order;
-                    const container = document.getElementById('mainSectionsContainer');
-                    order.forEach(id => {
-                        const sectionEl = container.querySelector(`[data-section-id="${id}"]`);
-                        if (sectionEl) {
-                            container.appendChild(sectionEl);
-                        }
-                    });
-                }
+                await setDoc(doc(db, "siteConfig", "pixKey"), { key });
+                showToast();
+                alert("Chave Pix salva com sucesso!");
             } catch (err) {
-                console.error("Erro ao aplicar ordem das secções:", err);
+                alert("Erro ao salvar chave Pix: " + err.message);
             }
         }
 
-        async function loadPublicBio() {
+        // Depoimentos Dinâmicos com Firebase
+        async function loadFirebaseTestimonials() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "testimonials"));
+                const pendingList = document.getElementById('pendingList');
+                const approvedList = document.getElementById('approvedList');
+                pendingList.innerHTML = '';
+                approvedList.innerHTML = '';
+
+                if (querySnapshot.empty) return;
+
+                querySnapshot.forEach((docSnap) => {
+                    const t = docSnap.data();
+                    const id = docSnap.id;
+                    const isPending = (t.status === 'pendente' || !t.status);
+
+                    const cardHTML = `
+                        <div class="bg-gray-900 border ${isPending ? 'border-amber-500/30' : 'border-emerald-500/20'} p-5 rounded-2xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4 testimonial-card" data-id="${id}">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-white text-base">${t.name}</span>
+                                    <span class="bg-amber-400/10 text-amber-400 text-xs px-2.5 py-0.5 rounded-full border border-amber-400/20">${t.service}</span>
+                                    <span class="${isPending ? 'bg-amber-500/20 text-amber-300' : 'bg-emerald-500/20 text-emerald-300'} text-xs px-2.5 py-0.5 rounded-full status-badge">${isPending ? 'Pendente' : 'Publicado'}</span>
+                                </div>
+                                <p class="text-gray-300 text-sm italic">"${t.message}"</p>
+                                <span class="text-xs text-gray-500">Enviado em: ${t.date || 'Recente'}</span>
+                            </div>
+                            <div class="flex items-center gap-2 w-full md:w-auto justify-end flex-wrap">
+                                ${isPending ? `<button onclick="approveFirebaseTestimonial('${id}', this)" class="bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-gray-950 font-bold px-3 py-2 rounded-xl text-xs transition border border-emerald-500/30 cursor-pointer">Aprovar</button>` : ''}
+                                <button onclick="deleteFirebaseTestimonial('${id}', this)" class="bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold px-3 py-2 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Excluir</button>
+                            </div>
+                        </div>
+                    `;
+                    if (isPending) {
+                        pendingList.insertAdjacentHTML('beforeend', cardHTML);
+                    } else {
+                        approvedList.insertAdjacentHTML('beforeend', cardHTML);
+                    }
+                });
+                updateCounters();
+            } catch (err) {
+                console.error("Erro ao carregar depoimentos:", err);
+            }
+        }
+
+        window.approveFirebaseTestimonial = async function(id, btn) {
+            try {
+                await setDoc(doc(db, "testimonials", id), { status: 'aprovado' }, { merge: true });
+                showToast();
+                await loadFirebaseTestimonials();
+            } catch (err) {
+                alert('Erro ao aprovar: ' + err.message);
+            }
+        }
+
+        window.deleteFirebaseTestimonial = async function(id, btn) {
+            if (confirm('Tem certeza que deseja excluir este depoimento?')) {
+                try {
+                    await deleteDoc(doc(db, "testimonials", id));
+                    showToast();
+                    await loadFirebaseTestimonials();
+                } catch (err) {
+                    alert('Erro ao excluir: ' + err.message);
+                }
+            }
+        }
+
+        function updateCounters() {
+            const pending = document.querySelectorAll('#pendingList .testimonial-card').length;
+            const approved = document.querySelectorAll('#approvedList .testimonial-card').length;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('totalCount').textContent = pending + approved;
+        }
+
+        // Planilhas de Treino
+        async function loadSpreadsheets() {
+            const container = document.getElementById('spreadsheetsListContainer');
+            container.innerHTML = '<p class="text-xs text-gray-500 italic col-span-full">A carregar planilhas...</p>';
+            try {
+                const querySnapshot = await getDocs(collection(db, "spreadsheets"));
+                container.innerHTML = '';
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p class="text-xs text-gray-500 italic col-span-full">Nenhuma planilha registada atualmente.</p>';
+                    return;
+                }
+                querySnapshot.forEach((docSnap) => {
+                    const s = docSnap.data();
+                    const id = docSnap.id;
+                    const price = s.price || "R$ 29,90";
+                    const cardHTML = `
+                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-2xl flex flex-col justify-between space-y-4 spreadsheet-card" data-id="${id}">
+                            <div class="space-y-2">
+                                <div class="flex justify-between items-start gap-2">
+                                    <h4 class="font-bold text-white text-base spreadsheet-name">${s.name}</h4>
+                                    <span class="bg-amber-400/10 text-amber-400 text-[10px] font-bold px-2.5 py-1 rounded-lg border border-amber-400/20">${price}</span>
+                                </div>
+                                <p class="text-gray-300 text-xs spreadsheet-desc leading-relaxed">${s.description}</p>
+                            </div>
+                            <div class="flex items-center justify-between pt-3 border-t border-gray-800">
+                                <a href="${s.fileUrl}" target="_blank" class="text-xs text-amber-400 hover:underline font-semibold flex items-center gap-1">Ver PDF 📄</a>
+                                <div class="flex gap-2">
+                                    <button type="button" onclick="openEditSpreadsheetModal('${id}', '${encodeURIComponent(s.name)}', '${encodeURIComponent(s.description)}', '${encodeURIComponent(s.fileUrl)}', '${encodeURIComponent(price)}')" class="bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-gray-950 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-blue-500/30 cursor-pointer">Editar</button>
+                                    <button type="button" onclick="deleteSpreadsheet('${id}', this)" class="bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Excluir</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', cardHTML);
+                });
+            } catch (err) {
+                console.error("Erro ao carregar planilhas:", err);
+                container.innerHTML = '<p class="text-xs text-rose-500 italic col-span-full">Erro ao carregar planilhas.</p>';
+            }
+        }
+
+        window.addNewSpreadsheet = async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('newSpreadsheetName').value;
+            const price = document.getElementById('newSpreadsheetValue').value;
+            const description = document.getElementById('newSpreadsheetDesc').value;
+            const fileInput = document.getElementById('newSpreadsheetFile');
+
+            if (!fileInput.files || !fileInput.files[0]) {
+                alert('Por favor, selecione um ficheiro PDF.');
+                return;
+            }
+
+            try {
+                const fileUrl = await toBase64(fileInput.files[0]);
+                await addDoc(collection(db, "spreadsheets"), {
+                    name,
+                    price,
+                    description,
+                    fileUrl,
+                    createdAt: new Date().toISOString()
+                });
+
+                document.getElementById('newSpreadsheetName').value = '';
+                document.getElementById('newSpreadsheetValue').value = '';
+                document.getElementById('newSpreadsheetDesc').value = '';
+                fileInput.value = '';
+
+                await loadSpreadsheets();
+                showToast();
+                alert('Planilha adicionada com sucesso!');
+            } catch (err) {
+                alert('Erro ao adicionar planilha: ' + err.message);
+            }
+        }
+
+        window.deleteSpreadsheet = async function(id, btn) {
+            if (confirm('Tem certeza que deseja excluir esta planilha de treino?')) {
+                try {
+                    await deleteDoc(doc(db, "spreadsheets", id));
+                    btn.closest('.spreadsheet-card').remove();
+                    showToast();
+                } catch (err) {
+                    alert('Erro ao excluir: ' + err.message);
+                }
+            }
+        }
+
+        window.openEditSpreadsheetModal = function(id, name, desc, url, price) {
+            document.getElementById('editSpreadsheetId').value = id;
+            document.getElementById('editSpreadsheetName').value = decodeURIComponent(name);
+            document.getElementById('editSpreadsheetValue').value = decodeURIComponent(price || "R$ 29,90");
+            document.getElementById('editSpreadsheetDesc').value = decodeURIComponent(desc);
+            document.getElementById('editSpreadsheetFile').value = '';
+            document.getElementById('editSpreadsheetModal').classList.remove('hidden');
+        }
+
+        window.closeEditSpreadsheetModal = function() {
+            document.getElementById('editSpreadsheetModal').classList.add('hidden');
+        }
+
+        window.saveEditedSpreadsheet = async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editSpreadsheetId').value;
+            const name = document.getElementById('editSpreadsheetName').value;
+            const price = document.getElementById('editSpreadsheetValue').value;
+            const description = document.getElementById('editSpreadsheetDesc').value;
+            const fileInput = document.getElementById('editSpreadsheetFile');
+
+            try {
+                const docRef = doc(db, "spreadsheets", id);
+                const docSnap = await getDoc(docRef);
+                let fileUrl = docSnap.exists() ? docSnap.data().fileUrl : '';
+
+                if (fileInput.files && fileInput.files[0]) {
+                    fileUrl = await toBase64(fileInput.files[0]);
+                }
+
+                await setDoc(docRef, { name, price, description, fileUrl }, { merge: true });
+                closeEditSpreadsheetModal();
+                await loadSpreadsheets();
+                showToast();
+                alert('Planilha atualizada com sucesso!');
+            } catch (err) {
+                alert('Erro ao atualizar planilha: ' + err.message);
+            }
+        }
+
+        // Auto-Save Bio / Conteúdo
+        async function loadBioContent() {
             try {
                 const bioDoc = await getDoc(doc(db, "siteConfig", "bio"));
                 if (bioDoc.exists()) {
                     const bio = bioDoc.data();
-                    if (bio.p1) document.getElementById('siteBioP1').textContent = bio.p1;
-                    if (bio.p2) document.getElementById('siteBioP2').textContent = bio.p2;
-                    if (bio.fisiculturismo) document.getElementById('siteBioFisiculturismo').textContent = bio.fisiculturismo;
-                    if (bio.peso) document.getElementById('siteBioPeso').textContent = bio.peso;
-                    if (bio.citacao) document.getElementById('siteBioCitacao').textContent = bio.citacao;
+                    document.getElementById('contentP1').value = bio.p1 || "";
+                    document.getElementById('contentP2').value = bio.p2 || "";
+                    document.getElementById('contentFisiculturismo').value = bio.fisiculturismo || "6 Anos";
+                    document.getElementById('contentPeso').value = bio.peso || "94kg → 68kg";
+                    document.getElementById('contentCitacao').value = bio.citacao || "";
                 }
             } catch (err) {
-                console.error("Erro ao carregar bio:", err);
+                console.error("Erro ao carregar conteúdo da bio:", err);
             }
         }
 
-        async function loadPublicModalidades() {
-            const container = document.getElementById('publicModalidadesContainer');
-            if (!container) return;
+        window.autoSaveContent = async function() {
+            const p1 = document.getElementById('contentP1').value;
+            const p2 = document.getElementById('contentP2').value;
+            const fisiculturismo = document.getElementById('contentFisiculturismo').value;
+            const peso = document.getElementById('contentPeso').value;
+            const citacao = document.getElementById('contentCitacao').value;
+
+            try {
+                await setDoc(doc(db, "siteConfig", "bio"), { p1, p2, fisiculturismo, peso, citacao });
+                showToast();
+            } catch (error) {
+                console.error('Erro ao auto-guardar conteúdo:', error.message);
+            }
+        }
+
+        // Gestão de Modalidades / Formas de Treino Dinâmicas
+        async function loadModalidadesContent() {
             try {
                 const docSnap = await getDoc(doc(db, "siteConfig", "modalidades"));
                 let methods = [];
@@ -343,8 +748,8 @@
                     methods = [
                         {
                             title: "Consultoria Online",
-                            desc: "Treine de onde estiver, com planilhas e orientações elaboradas sob medida para você ou em dupla (condição especial para casal).",
-                            items: ["Treinos estruturados para sua evolução", "Opção individual e para casal", "Flexibilidade de horários e locais"],
+                            desc: "Treino de onde estiver, com planilhas e orientações elaboradas sob medida para você ou em dupla (condição especial para casal).",
+                            items: ["Treinos estruturados para sua evolução", "Plano alimentar", "Flexibilidade de horários e locais"],
                             btn: "Tirar Dúvidas - Consultoria Online"
                         },
                         {
@@ -355,49 +760,188 @@
                         }
                     ];
                 }
-
-                container.innerHTML = '';
-                methods.forEach(m => {
-                    let itemsHTML = '';
-                    if (m.items && Array.isArray(m.items)) {
-                        m.items.forEach(item => {
-                            itemsHTML += `<li class="flex items-center gap-2 text-gray-300 text-sm"><span class="text-amber-400">✓</span> ${item}</li>`;
-                        });
-                    }
-
-                    let badge = "MODALIDADE";
-                    if (m.title.toLowerCase().includes('online')) badge = "ON-LINE";
-                    if (m.title.toLowerCase().includes('presencial')) badge = "PRESENCIAL";
-
-                    const whatsappMsg = encodeURIComponent(`Olá Diego, gostaria de saber mais sobre o ${m.title}.`);
-
-                    const cardHTML = `
-                        <div class="bg-gray-950 p-6 sm:p-8 rounded-3xl border border-gray-800 flex flex-col justify-between hover:border-amber-500/50 transition shadow-2xl space-y-6">
-                            <div class="space-y-4">
-                                <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-400/20 inline-block">${badge}</span>
-                                <h3 class="text-2xl font-bold text-white">${m.title}</h3>
-                                <p class="text-gray-400 text-sm leading-relaxed">${m.desc}</p>
-                                <ul class="space-y-2 pt-2 border-t border-gray-800/60">
-                                    ${itemsHTML}
-                                </ul>
-                            </div>
-                            <div>
-                                <a href="https://wa.me/5551980161186?text=${whatsappMsg}" target="_blank" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl text-center transition block shadow-lg text-sm">${m.btn || 'Tirar Dúvidas'}</a>
-                            </div>
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', cardHTML);
-                });
+                renderModalidades(methods);
             } catch (err) {
-                console.error("Erro ao carregar modalidades públicas:", err);
-                container.innerHTML = '<p class="text-xs text-rose-500 italic col-span-full text-center py-4">Erro ao carregar modalidades.</p>';
+                console.error("Erro ao carregar modalidades:", err);
             }
         }
 
-        const carouselStates = {};
+        function renderModalidades(methods) {
+            const container = document.getElementById('modalidadesContainer');
+            container.innerHTML = '';
 
-        async function loadPublicCarousels() {
-            const container = document.getElementById('dynamicCarouselsContainer');
+            methods.forEach((m, index) => {
+                const itemsText = (m.items || []).join('\n');
+                const cardDiv = document.createElement('div');
+                cardDiv.className = "bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 modalidade-card";
+                cardDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-amber-400/20">Método ${index + 1}</span>
+                        <button type="button" onclick="deleteModalidadeCard(this)" class="bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Excluir Método</button>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Título</label>
+                        <input type="text" value="${m.title || ''}" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-title" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Descrição</label>
+                        <textarea rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-desc" required>${m.desc || ''}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Benefícios (Um por linha)</label>
+                        <textarea rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-items" placeholder="- Item 1&#10;- Item 2" required>${itemsText}</textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Texto do Botão</label>
+                        <input type="text" value="${m.btn || ''}" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-btn" required>
+                    </div>
+                    <button type="button" onclick="saveModalidadeCard(this)" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3 rounded-xl transition shadow-lg text-sm cursor-pointer mt-2">Salvar Alterações</button>
+                `;
+                container.appendChild(cardDiv);
+            });
+        }
+
+        window.addNewModalidadeCard = function() {
+            const container = document.getElementById('modalidadesContainer');
+            const tempDiv = document.createElement('div');
+            tempDiv.className = "bg-gray-900 border border-gray-800 p-6 rounded-2xl space-y-4 modalidade-card";
+            tempDiv.innerHTML = `
+                <div class="flex justify-between items-center">
+                    <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-amber-400/20">Novo Método</span>
+                    <button type="button" onclick="deleteModalidadeCard(this)" class="bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Excluir Método</button>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Título</label>
+                    <input type="text" placeholder="Ex: Consultoria VIP" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-title" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Descrição</label>
+                    <textarea rows="3" placeholder="Descrição do novo método..." class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-desc" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Benefícios (Um por linha)</label>
+                    <textarea rows="3" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-items" placeholder="- Benefício 1&#10;- Benefício 2" required></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Texto do Botão</label>
+                    <input type="text" placeholder="Tirar Dúvidas - Novo Método" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 m-btn" required>
+                </div>
+                <button type="button" onclick="saveModalidadeCard(this)" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3 rounded-xl transition shadow-lg text-sm cursor-pointer mt-2">Salvar Alterações</button>
+            `;
+            container.appendChild(tempDiv);
+        }
+
+        window.deleteModalidadeCard = async function(btn) {
+            if (confirm('Tem certeza que deseja excluir este método?')) {
+                btn.closest('.modalidade-card').remove();
+                await persistAllModalidades();
+            }
+        }
+
+        window.saveModalidadeCard = async function(btn) {
+            await persistAllModalidades();
+            alert('Alterações salvas com sucesso!');
+        }
+
+        async function persistAllModalidades() {
+            const cards = document.querySelectorAll('.modalidade-card');
+            let methods = [];
+            cards.forEach(card => {
+                const title = card.querySelector('.m-title').value;
+                const desc = card.querySelector('.m-desc').value;
+                const itemsStr = card.querySelector('.m-items').value;
+                const items = itemsStr.split('\n').map(i => i.trim()).filter(i => i !== '');
+                const btnText = card.querySelector('.m-btn').value;
+
+                methods.push({ title, desc, items, btn: btnText });
+            });
+
+            try {
+                await setDoc(doc(db, "siteConfig", "modalidades"), { methods });
+                showToast();
+            } catch (error) {
+                console.error('Erro ao guardar modalidades:', error.message);
+                alert('Erro ao guardar no Firebase: ' + error.message);
+            }
+        }
+
+        // Gestão de Ordem das Secções
+        async function loadSectionsOrder() {
+            try {
+                const docSnap = await getDoc(doc(db, "siteConfig", "sectionsOrder"));
+                let order = [];
+                if (docSnap.exists() && docSnap.data().order) {
+                    order = docSnap.data().order;
+                } else {
+                    order = defaultSections.map(s => s.id);
+                }
+                renderSectionsOrderUI(order);
+            } catch (err) {
+                console.error("Erro ao carregar ordem das secções:", err);
+                renderSectionsOrderUI(defaultSections.map(s => s.id));
+            }
+        }
+
+        function renderSectionsOrderUI(orderIds) {
+            const container = document.getElementById('sectionsOrderContainer');
+            container.innerHTML = '';
+
+            orderIds.forEach((id, index) => {
+                const sec = defaultSections.find(s => s.id === id) || { id, name: id };
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "bg-gray-900 border border-gray-800 p-4 rounded-2xl flex items-center justify-between section-order-item";
+                itemDiv.dataset.id = sec.id;
+                itemDiv.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="bg-amber-500 text-gray-950 font-extrabold w-7 h-7 rounded-xl flex items-center justify-center text-xs section-pos">${index + 1}</span>
+                        <span class="font-bold text-white text-sm">${sec.name}</span>
+                    </div>
+                    <div class="flex gap-1">
+                        <button type="button" onclick="moveSection(this, -1)" class="bg-gray-800 hover:bg-gray-700 text-white w-8 h-8 rounded-xl text-xs font-bold transition flex items-center justify-center cursor-pointer" title="Subir">▲</button>
+                        <button type="button" onclick="moveSection(this, 1)" class="bg-gray-800 hover:bg-gray-700 text-white w-8 h-8 rounded-xl text-xs font-bold transition flex items-center justify-center cursor-pointer" title="Descer">▼</button>
+                    </div>
+                `;
+                container.appendChild(itemDiv);
+            });
+        }
+
+        window.moveSection = async function(btn, direction) {
+            const item = btn.closest('.section-order-item');
+            const parent = item.parentNode;
+            if (direction === -1 && item.previousElementSibling) {
+                parent.insertBefore(item, item.previousElementSibling);
+            } else if (direction === 1 && item.nextElementSibling) {
+                parent.insertBefore(item.nextElementSibling, item);
+            }
+            updateSectionPositions();
+            await triggerAutoSaveSectionsOrder();
+        }
+
+        function updateSectionPositions() {
+            const items = document.querySelectorAll('#sectionsOrderContainer .section-order-item');
+            items.forEach((item, index) => {
+                const pos = item.querySelector('.section-pos');
+                if (pos) pos.textContent = index + 1;
+            });
+        }
+
+        async function triggerAutoSaveSectionsOrder() {
+            const items = document.querySelectorAll('#sectionsOrderContainer .section-order-item');
+            let order = [];
+            items.forEach(item => {
+                order.push(item.dataset.id);
+            });
+
+            try {
+                await setDoc(doc(db, "siteConfig", "sectionsOrder"), { order });
+                showToast();
+            } catch (err) {
+                console.error("Erro ao guardar ordem das secções:", err);
+            }
+        }
+
+        // Auto-Save Gestão de Carrosséis
+        async function loadCarouselContent() {
             try {
                 const carouselDoc = await getDoc(doc(db, "siteConfig", "carousel"));
                 let groups = [];
@@ -406,376 +950,319 @@
                     const data = carouselDoc.data();
                     if (data.groups && Array.isArray(data.groups)) {
                         groups = data.groups;
-                    } else if (data.items) {
-                        groups = [{
-                            title: data.title || "O Método Transformação de Elite",
-                            desc: data.desc || "Acompanhe as imagens abaixo para entender como funciona o nosso método de acompanhamento.",
-                            items: data.items
-                        }];
                     }
                 }
 
-                if (groups.length === 0) {
-                    let defaultItems = [];
-                    for (let i = 1; i <= 9; i++) {
-                        defaultItems.push({ image: `_metodo-${i}.jpg`, time: 6 });
-                    }
-                    groups.push({
-                        title: "O Método Transformação de Elite",
-                        desc: "Acompanhe as imagens abaixo para entender como funciona o nosso método de acompanhamento.",
-                        items: defaultItems
-                    });
-                }
-
-                container.innerHTML = '';
-                groups.forEach((group, index) => {
-                    let itemsHTML = '';
-                    group.items.forEach((item, iIdx) => {
-                        itemsHTML += `
-                            <div class="carousel-slide-${index} absolute inset-0 transition-opacity duration-1000 flex items-center justify-center ${iIdx === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}">
-                                <img src="${item.image}" class="max-h-full max-w-full object-contain pointer-events-none">
-                            </div>
-                        `;
-                    });
-
-                    const groupHTML = `
-                        <div class="max-w-sm mx-auto space-y-4">
-                            <div class="text-center space-y-2">
-                                <h4 class="text-2xl sm:text-3xl font-extrabold text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.95)]">${group.title}</h4>
-                                <p class="text-sm font-bold text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">${group.desc}</p>
-                            </div>
-                            <div id="carousel-frame-${index}" class="relative max-w-sm mx-auto h-[450px] sm:h-[500px] bg-black rounded-3xl overflow-hidden border border-gray-800 flex items-center justify-center p-4 shadow-2xl select-none">
-                                <!-- Botões de Navegação (Setas) -->
-                                <button type="button" onclick="manualChangeSlide(${index}, -1)" class="absolute left-4 bottom-6 bg-black/80 hover:bg-amber-500 text-amber-400 hover:text-gray-950 w-11 h-11 rounded-full flex items-center justify-center font-bold text-lg z-30 transition border border-amber-500/30 shadow-xl cursor-pointer">&#10094;</button>
-                                <button type="button" onclick="manualChangeSlide(${index}, 1)" class="absolute right-4 bottom-6 bg-black/80 hover:bg-amber-500 text-amber-400 hover:text-gray-950 w-11 h-11 rounded-full flex items-center justify-center font-bold text-lg z-30 transition border border-amber-500/30 shadow-xl cursor-pointer">&#10095;</button>
-                                
-                                ${itemsHTML}
-                            </div>
-                            <div class="text-center pt-1">
-                                <a href="https://wa.me/5551980161186?text=Olá%20Diego,%20tenho%20dúvida%20sobre%20o%20Método%20Transformação%20de%20Elite!" target="_blank" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-8 py-3.5 rounded-xl transition shadow-xl text-base inline-block">Tirar Dúvidas sobre o Método</a>
-                            </div>
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', groupHTML);
-                    initCarouselSlider(index, group.items);
-                });
+                renderCarouselGroups(groups);
             } catch (err) {
-                console.error("Erro ao carregar carrosséis públicos:", err);
+                console.error("Erro ao carregar carrosséis:", err);
             }
         }
 
-        function initCarouselSlider(groupIndex, items) {
-            if (!items || items.length <= 1) return;
-            
-            carouselStates[groupIndex] = {
-                currentIndex: 0,
-                items: items,
-                isPaused: false,
-                timer: null
-            };
+        function renderCarouselGroups(groups) {
+            const container = document.getElementById('carouselGroupsContainer');
+            container.innerHTML = '';
 
-            startCarouselTimer(groupIndex);
-
-            const frame = document.getElementById(`carousel-frame-${groupIndex}`);
-            if (frame) {
-                frame.addEventListener('mousedown', () => pauseCarousel(groupIndex));
-                frame.addEventListener('mouseup', () => resumeCarousel(groupIndex));
-                frame.addEventListener('mouseleave', () => resumeCarousel(groupIndex));
-                
-                frame.addEventListener('touchstart', () => pauseCarousel(groupIndex));
-                frame.addEventListener('touchend', () => resumeCarousel(groupIndex));
-            }
-        }
-
-        function startCarouselTimer(groupIndex) {
-            const state = carouselStates[groupIndex];
-            if (!state) return;
-            
-            if (state.timer) clearInterval(state.timer);
-
-            state.timer = setInterval(() => {
-                if (!state.isPaused) {
-                    changeSlide(groupIndex, 1);
-                }
-            }, (state.items[state.currentIndex].time || 6) * 1000);
-        }
-
-        function pauseCarousel(groupIndex) {
-            if (carouselStates[groupIndex]) {
-                carouselStates[groupIndex].isPaused = true;
-            }
-        }
-
-        function resumeCarousel(groupIndex) {
-            if (carouselStates[groupIndex]) {
-                carouselStates[groupIndex].isPaused = false;
-            }
-        }
-
-        function changeSlide(groupIndex, direction) {
-            const state = carouselStates[groupIndex];
-            if (!state) return;
-
-            const slides = document.querySelectorAll(`.carousel-slide-${groupIndex}`);
-            if (!slides.length) return;
-
-            slides[state.currentIndex].classList.remove('opacity-100', 'z-10');
-            slides[state.currentIndex].classList.add('opacity-0', 'z-0');
-
-            state.currentIndex = (state.currentIndex + direction + slides.length) % slides.length;
-
-            slides[state.currentIndex].classList.remove('opacity-0', 'z-0');
-            slides[state.currentIndex].classList.add('opacity-100', 'z-10');
-        }
-
-        window.manualChangeSlide = function(groupIndex, direction) {
-            pauseCarousel(groupIndex);
-            changeSlide(groupIndex, direction);
-            startCarouselTimer(groupIndex);
-        }
-
-        async function loadPublicSpreadsheets() {
-            const container = document.getElementById('publicSpreadsheetsContainer');
-            try {
-                const querySnapshot = await getDocs(collection(db, "spreadsheets"));
-                container.innerHTML = '';
-                if (querySnapshot.empty) {
-                    container.innerHTML = '<p class="text-xs text-gray-500 italic col-span-full text-center py-4">Nenhuma planilha disponível no momento.</p>';
-                    return;
-                }
-                querySnapshot.forEach((docSnap) => {
-                    const s = docSnap.data();
-                    const price = s.price || "R$ 29,90";
-                    const cardHTML = `
-                        <div class="bg-gray-950 p-6 sm:p-8 rounded-3xl border border-gray-800 flex flex-col justify-between hover:border-amber-500/50 transition shadow-2xl">
-                            <div>
-                                <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-amber-400/20">PLANILHA</span>
-                                <div class="flex justify-between items-start gap-2 mt-3 mb-2">
-                                    <h4 class="text-2xl font-bold text-white">${s.name}</h4>
-                                    <span class="text-amber-400 font-extrabold text-lg">${price}</span>
-                                </div>
-                                <p class="text-gray-400 mb-5 text-sm leading-relaxed line-clamp-3">${s.description}</p>
-                            </div>
-                            <button type="button" onclick="openSpreadsheetModal('${encodeURIComponent(s.name)}', '${encodeURIComponent(s.description)}', '${encodeURIComponent(price)}')" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl text-center transition block shadow-lg text-sm cursor-pointer">Sobre a Planilha</button>
-                        </div>
-                    `;
-                    container.insertAdjacentHTML('beforeend', cardHTML);
-                });
-            } catch (err) {
-                console.error("Erro ao carregar planilhas públicas:", err);
-                container.innerHTML = '<p class="text-xs text-rose-500 italic col-span-full text-center py-4">Erro ao carregar planilhas.</p>';
-            }
-        }
-
-        let selectedSpreadsheetName = '';
-        let selectedSpreadsheetPrice = '';
-
-        window.openSpreadsheetModal = function(name, desc, price) {
-            selectedSpreadsheetName = decodeURIComponent(name);
-            selectedSpreadsheetPrice = decodeURIComponent(price || "R$ 29,90");
-            document.getElementById('modalSpreadsheetTitle').textContent = selectedSpreadsheetName;
-            document.getElementById('modalSpreadsheetPrice').textContent = selectedSpreadsheetPrice;
-            document.getElementById('modalSpreadsheetDesc').textContent = decodeURIComponent(desc);
-            document.getElementById('spreadsheetModal').classList.remove('hidden');
-        }
-
-        window.closeSpreadsheetModal = function() {
-            document.getElementById('spreadsheetModal').classList.add('hidden');
-        }
-
-        // Funções para cálculo do Pix BR Code com valor dinâmico
-        function calcularCRC16(payload) {
-            let polinomio = 0x1021;
-            let resultado = 0xFFFF;
-            for (let i = 0; i < payload.length; i++) {
-                let c = payload.charCodeAt(i);
-                resultado ^= (c << 8);
-                for (let j = 0; j < 8; j++) {
-                    if ((resultado & 0x8000) !== 0) {
-                        resultado = ((resultado << 1) ^ polinomio) & 0xFFFF;
-                    } else {
-                        resultado = (resultado << 1) & 0xFFFF;
-                    }
-                }
-            }
-            return resultado.toString(16).toUpperCase().padStart(4, '0');
-        }
-
-        function gerarPayloadPix(chavePix, nomeRecebedor, cidadeRecebedor, valorStr) {
-            let valorLimpo = valorStr.replace(/[^\d,.-]/g, '').replace(',', '.');
-            if (isNaN(valorLimpo) || valorLimpo === '') valorLimpo = '0.00';
-
-            const formatField = (id, value) => {
-                const len = value.length.toString().padStart(2, '0');
-                return `${id}${len}${value}`;
-            };
-
-            let gui = 'br.gov.bcb.pix';
-            let accInfo = formatField('00', gui) + formatField('01', chavePix);
-            
-            let payload = '';
-            payload += formatField('00', '01');
-            payload += formatField('26', accInfo);
-            payload += formatField('52', '0000');
-            payload += formatField('53', '986');
-            
-            if (parseFloat(valorLimpo) > 0) {
-                payload += formatField('54', Number(valorLimpo).toFixed(2));
-            }
-            
-            payload += formatField('58', 'BR');
-            payload += formatField('59', nomeRecebedor.substring(0, 25));
-            payload += formatField('60', cidadeRecebedor.substring(0, 15));
-            
-            let additionalData = formatField('05', 'PLANILHA');
-            payload += formatField('62', additionalData);
-            payload += '6304';
-            
-            let crc = calcularCRC16(payload);
-            return payload + crc;
-        }
-
-        window.openPixModal = function() {
-            closeSpreadsheetModal();
-            document.getElementById('pixModalTitle').textContent = selectedSpreadsheetName;
-            document.getElementById('pixModalPrice').textContent = selectedSpreadsheetPrice;
-
-            // Gera o payload oficial do Pix Copia e Cola contendo a chave ativa e o preço dinâmico da planilha
-            const payloadPixCompleto = gerarPayloadPix(activePixKey, "Diego Vasconcelos", "Porto Alegre", selectedSpreadsheetPrice);
-
-            const pixInput = document.getElementById('pixKeyInput');
-            if (pixInput) {
-                pixInput.value = payloadPixCompleto;
-            }
-
-            const copyBtn = document.getElementById('copyPixBtn');
-            if (copyBtn) {
-                copyBtn.textContent = "Copiar Pix";
-                copyBtn.className = "bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
-            }
-
-            const qrImg = document.getElementById('pixQrCodeImg');
-            if (qrImg) {
-                qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(payloadPixCompleto)}`;
-            }
-
-            const message = encodeURIComponent(`Olá Diego, acabei de efetuar o pagamento Pix no valor de ${selectedSpreadsheetPrice} referente à planilha "${selectedSpreadsheetName}" e envio aqui o comprovante pix!`);
-            document.getElementById('whatsappPixLink').href = `https://wa.me/5551980161186?text=${message}`;
-            document.getElementById('pixModal').classList.remove('hidden');
-        }
-
-        window.copyPixKey = function() {
-            const pixInput = document.getElementById('pixKeyInput');
-            const copyBtn = document.getElementById('copyPixBtn');
-            if (!pixInput) return;
-
-            pixInput.select();
-            pixInput.setSelectionRange(0, 99999);
-
-            navigator.clipboard.writeText(pixInput.value).then(() => {
-                copyBtn.textContent = "Copiado! ✓";
-                copyBtn.className = "bg-emerald-500 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
-                
-                setTimeout(() => {
-                    copyBtn.textContent = "Copiar Pix";
-                    copyBtn.className = "bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-3.5 py-2 rounded-lg text-xs transition whitespace-nowrap cursor-pointer";
-                }, 3000);
-            }).catch(err => {
-                alert('Erro ao copiar código Pix: ' + err);
+            groups.forEach((group, gIndex) => {
+                const card = appendGroupCard(group, gIndex, false);
+                container.appendChild(card);
             });
+            updateAllGroupBadges();
         }
 
-        window.closePixModal = function() {
-            document.getElementById('pixModal').classList.add('hidden');
-        }
+        function appendGroupCard(group = { title: '', desc: '', items: [] }, gIndex = 0, startOpen = false) {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = "bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 space-y-6 carousel-group-card";
+            
+            const firstImg = (group.items && group.items.length > 0) ? group.items[0].image : 'logo.png';
 
-        let approvedTestimonials = [];
-        let currentTestimonialIndex = 0;
-
-        async function loadPublicTestimonials() {
-            const container = document.getElementById('testimonialSlideContainer');
-            const counterEl = document.getElementById('testimonialCounter');
-            try {
-                const querySnapshot = await getDocs(collection(db, "testimonials"));
-                approvedTestimonials = [];
-
-                querySnapshot.forEach((docSnap) => {
-                    const t = docSnap.data();
-                    if (t.status === 'aprovado') {
-                        approvedTestimonials.push(t);
-                    }
+            let itemsHTML = '';
+            if (group.items && group.items.length > 0) {
+                group.items.forEach((item, iIndex) => {
+                    itemsHTML += `
+                        <div class="bg-gray-900 border border-gray-800 p-4 rounded-2xl flex flex-col justify-between carousel-item-card" data-image="${item.image}">
+                            <div>
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-amber-400/20">Imagem <span class="item-pos">${iIndex + 1}</span></span>
+                                    <div class="flex gap-1">
+                                        <button type="button" onclick="moveCarouselItemWithinGroup(this, -1)" class="bg-gray-800 hover:bg-gray-700 text-white w-7 h-7 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer" title="Mover">▲</button>
+                                        <button type="button" onclick="moveCarouselItemWithinGroup(this, 1)" class="bg-gray-800 hover:bg-gray-700 text-white w-7 h-7 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer" title="Mover">▼</button>
+                                    </div>
+                                </div>
+                                <div class="h-44 bg-black rounded-xl mb-3 flex items-center justify-center overflow-hidden border border-gray-800">
+                                    <img src="${item.image}" class="max-h-full max-w-full object-contain item-img">
+                                </div>
+                                <p class="text-xs text-gray-400">Tempo: <span class="item-time">${item.time || 6}</span> seg</p>
+                            </div>
+                            <div class="flex gap-2 mt-4 pt-3 border-t border-gray-800">
+                                <button type="button" onclick="openEditCarouselModal(this)" class="w-1/2 bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-gray-950 font-bold py-2 rounded-xl text-xs transition border border-blue-500/30 cursor-pointer">Editar</button>
+                                <button type="button" onclick="const gCard = this.closest('.carousel-group-card'); this.closest('.carousel-item-card').remove(); checkEmptyGroup(gCard); updateGroupCover(gCard); triggerAutoSaveCarousels();" class="w-1/2 bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold py-2 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Excluir</button>
+                            </div>
+                        </div>
+                    `;
                 });
-
-                approvedTestimonials = approvedTestimonials.slice(-30);
-
-                if (approvedTestimonials.length === 0) {
-                    approvedTestimonials = [
-                        { message: "O acompanhamento do Diego mudou completamente a minha forma de treinar. A atenção aos detalhes na execução e a consultoria online funcionam super bem para a minha rotina!", name: "Mariana S.", service: "Consultoria Online" },
-                        { message: "Treinamos em casal com o Diego e a energia é fantástica! Além de focar na nossa evolução, uma dieta de brinde ajudou demais na nossa reeducação alimentar.", name: "Lucas e Camila", service: "Treinamento Presencial" }
-                    ];
-                }
-
-                currentTestimonialIndex = 0;
-                renderTestimonialSlide();
-            } catch (err) {
-                console.error("Erro ao carregar depoimentos públicos:", err);
-                container.innerHTML = '<p class="text-xs text-rose-500 italic text-center">Erro ao carregar relatos.</p>';
+            } else {
+                itemsHTML = `<p class="text-xs text-gray-500 italic col-span-full empty-msg">Nenhuma imagem adicionada ainda neste conjunto.</p>`;
             }
-        }
 
-        function renderTestimonialSlide() {
-            const container = document.getElementById('testimonialSlideContainer');
-            const counterEl = document.getElementById('testimonialCounter');
-            if (!approvedTestimonials.length) return;
+            groupDiv.innerHTML = `
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex items-center gap-4">
+                        <span class="bg-amber-500 text-gray-950 font-extrabold w-8 h-8 rounded-xl flex items-center justify-center text-sm group-index-badge">1</span>
+                        <div class="w-16 h-16 bg-black rounded-xl overflow-hidden border border-gray-800 flex items-center justify-center flex-shrink-0">
+                            <img src="${firstImg}" class="max-h-full max-w-full object-contain group-cover-img">
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-white group-title-display">${group.title || 'Conjunto de Carrossel'}</h4>
+                            <p class="text-xs text-gray-400 group-desc-display">${group.desc || 'Clique em Editar para configurar as imagens'}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button type="button" onclick="toggleEditGroup(this)" class="bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-gray-950 font-bold px-4 py-2 rounded-xl text-xs transition border border-blue-500/30 cursor-pointer">Editar</button>
+                        <button type="button" onclick="moveCarouselGroup(this, -1)" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-300 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer" title="Posicionar Acima">▲</button>
+                        <button type="button" onclick="moveCarouselGroup(this, 1)" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 text-gray-300 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer" title="Posicionar Abaixo">▼</button>
+                        <button type="button" onclick="deleteCarouselGroup(this)" class="bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer">Excluir</button>
+                    </div>
+                </div>
 
-            const t = approvedTestimonials[currentTestimonialIndex];
-            container.innerHTML = `
-                <div class="space-y-3">
-                    <p class="text-gray-200 italic text-base sm:text-lg leading-relaxed">"${t.message}"</p>
-                    <div class="pt-2 border-t border-gray-800/80">
-                        <span class="font-bold text-amber-400 block text-base">— ${t.name}</span>
-                        <span class="text-xs text-gray-400 font-medium">${t.service || 'Aluno(a)'}</span>
+                <div class="group-editor-body ${startOpen ? '' : 'hidden'} space-y-6 pt-6 border-t border-gray-800">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Título do Conjunto</label>
+                            <input type="text" value="${group.title || ''}" oninput="updateGroupHeaderPreview(this)" onblur="triggerAutoSaveCarousels()" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 group-title-input">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Descrição / Subtítulo do Conjunto</label>
+                            <input type="text" value="${group.desc || ''}" oninput="updateGroupHeaderPreview(this)" onblur="triggerAutoSaveCarousels()" required class="w-full bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-amber-500 group-desc-input">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-xs uppercase font-bold text-gray-400 tracking-wider">Imagens deste Conjunto</span>
+                            <button type="button" onclick="addNewImageRowToGroup(this)" class="bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-gray-950 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-amber-500/30 cursor-pointer">+ Adicionar Imagem</button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 group-items-grid">
+                            ${itemsHTML}
+                        </div>
                     </div>
                 </div>
             `;
-            counterEl.textContent = `${currentTestimonialIndex + 1} / ${approvedTestimonials.length}`;
+            return groupDiv;
         }
 
-        window.changeTestimonialSlide = function(direction) {
-            if (!approvedTestimonials.length) return;
-            currentTestimonialIndex = (currentTestimonialIndex + direction + approvedTestimonials.length) % approvedTestimonials.length;
-            renderTestimonialSlide();
+        window.toggleEditGroup = function(btn) {
+            const card = btn.closest('.carousel-group-card');
+            const body = card.querySelector('.group-editor-body');
+            body.classList.toggle('hidden');
         }
 
-        window.openTestimonialModal = function() {
-            document.getElementById('testimonialModal').classList.remove('hidden');
+        window.updateGroupHeaderPreview = function(input) {
+            const card = input.closest('.carousel-group-card');
+            const titleVal = card.querySelector('.group-title-input').value;
+            const descVal = card.querySelector('.group-desc-input').value;
+            card.querySelector('.group-title-display').textContent = titleVal || 'Conjunto de Carrossel';
+            card.querySelector('.group-desc-display').textContent = descVal || 'Sem descrição';
         }
 
-        window.closeTestimonialModal = function() {
-            document.getElementById('testimonialModal').classList.add('hidden');
+        window.addNewCarouselGroup = function() {
+            const container = document.getElementById('carouselGroupsContainer');
+            const newCard = appendGroupCard({ title: '', desc: '', items: [] }, 0, true);
+            container.prepend(newCard);
+            updateAllGroupBadges();
+            triggerAutoSaveCarousels();
         }
 
-        window.submitTestimonial = async function(e) {
+        window.deleteCarouselGroup = function(btn) {
+            if (confirm('Tem certeza que deseja excluir este conjunto de carrossel inteiro?')) {
+                btn.closest('.carousel-group-card').remove();
+                updateAllGroupBadges();
+                triggerAutoSaveCarousels();
+            }
+        }
+
+        window.moveCarouselGroup = function(btn, direction) {
+            const card = btn.closest('.carousel-group-card');
+            const parent = card.parentNode;
+            if (direction === -1 && card.previousElementSibling) {
+                parent.insertBefore(card, card.previousElementSibling);
+            } else if (direction === 1 && card.nextElementSibling) {
+                parent.insertBefore(card.nextElementSibling, card);
+            }
+            updateAllGroupBadges();
+            triggerAutoSaveCarousels();
+        }
+
+        function updateAllGroupBadges() {
+            const cards = document.querySelectorAll('#carouselGroupsContainer .carousel-group-card');
+            cards.forEach((card, index) => {
+                const badge = card.querySelector('.group-index-badge');
+                if (badge) badge.textContent = index + 1;
+            });
+        }
+
+        window.addNewImageRowToGroup = function(btn) {
+            const groupCard = btn.closest('.carousel-group-card');
+            const grid = groupCard.querySelector('.group-items-grid');
+            
+            const emptyMsg = grid.querySelector('.empty-msg');
+            if (emptyMsg) emptyMsg.remove();
+
+            const tempDiv = document.createElement('div');
+            tempDiv.className = "bg-gray-900 border border-gray-800 p-4 rounded-2xl flex flex-col justify-between carousel-item-card";
+            tempDiv.innerHTML = `
+                <div>
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="bg-amber-400/10 text-amber-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-amber-400/20">Imagem <span class="item-pos">1</span></span>
+                        <div class="flex gap-1">
+                            <button type="button" onclick="moveCarouselItemWithinGroup(this, -1)" class="bg-gray-800 hover:bg-gray-700 text-white w-7 h-7 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer" title="Mover">▲</button>
+                            <button type="button" onclick="moveCarouselItemWithinGroup(this, 1)" class="bg-gray-800 hover:bg-gray-700 text-white w-7 h-7 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer" title="Mover">▼</button>
+                        </div>
+                    </div>
+                    <div class="space-y-3 mb-3">
+                        <div>
+                            <label class="block text-[10px] uppercase font-bold text-amber-400 mb-1">Selecionar Ficheiro</label>
+                            <input type="file" accept="image/*" required onchange="triggerAutoSaveCarousels()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-white text-xs new-file-input">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] uppercase font-bold text-amber-400 mb-1">Tempo (segundos)</label>
+                            <input type="number" value="6" min="2" max="30" required onblur="triggerAutoSaveCarousels()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-white text-xs item-time-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-2 pt-2 border-t border-gray-800">
+                    <button type="button" onclick="const gCard = this.closest('.carousel-group-card'); this.closest('.carousel-item-card').remove(); checkEmptyGroup(gCard); updateGroupCover(gCard); triggerAutoSaveCarousels();" class="w-full bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold py-2 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Remover</button>
+                </div>
+            `;
+            grid.appendChild(tempDiv);
+            updateGroupPositions(groupCard);
+        }
+
+        window.moveCarouselItemWithinGroup = function(btn, direction) {
+            const card = btn.closest('.carousel-item-card');
+            const parent = card.parentNode;
+            if (direction === -1 && card.previousElementSibling) {
+                parent.insertBefore(card, card.previousElementSibling);
+            } else if (direction === 1 && card.nextElementSibling) {
+                parent.insertBefore(card.nextElementSibling, card);
+            }
+            const groupCard = card.closest('.carousel-group-card');
+            updateGroupPositions(groupCard);
+            updateGroupCover(groupCard);
+            triggerAutoSaveCarousels();
+        }
+
+        function updateGroupPositions(groupCard) {
+            if (!groupCard) return;
+            const cards = groupCard.querySelectorAll('.carousel-item-card');
+            cards.forEach((card, index) => {
+                const pos = card.querySelector('.item-pos');
+                if (pos) pos.textContent = index + 1;
+            });
+        }
+
+        function updateGroupCover(groupCard) {
+            const firstCardImg = groupCard.querySelector('.carousel-item-card .item-img');
+            const coverImg = groupCard.querySelector('.group-cover-img');
+            if (firstImg && coverImg) {
+                coverImg.src = firstImg.src;
+            } else if (coverImg) {
+                coverImg.src = 'logo.png';
+            }
+        }
+
+        window.checkEmptyGroup = function(groupCard) {
+            const grid = groupCard.querySelector('.group-items-grid');
+            const cards = grid.querySelectorAll('.carousel-item-card');
+            if (cards.length === 0) {
+                grid.innerHTML = `<p class="text-xs text-gray-500 italic col-span-full empty-msg">Nenhuma imagem adicionada ainda neste conjunto.</p>`;
+            }
+        }
+
+        let currentItemEditing = null;
+        window.openEditCarouselModal = function(btn) {
+            currentItemEditing = btn.closest('.carousel-item-card');
+            const timeEl = currentItemEditing.querySelector('.item-time');
+            const time = timeEl ? timeEl.textContent : 6;
+            document.getElementById('editCarouselTime').value = time;
+            document.getElementById('editCarouselImageInput').value = '';
+            document.getElementById('editCarouselModal').classList.remove('hidden');
+        }
+
+        window.closeEditCarouselModal = function() {
+            document.getElementById('editCarouselModal').classList.add('hidden');
+        }
+
+        window.saveEditedCarouselItem = async function(e) {
             e.preventDefault();
-            const name = document.getElementById('clientName').value;
-            const service = document.getElementById('clientService').value;
-            const message = document.getElementById('clientMessage').value;
+            if (currentItemEditing) {
+                const time = document.getElementById('editCarouselTime').value;
+                const timeSpan = currentItemEditing.querySelector('.item-time');
+                if (timeSpan) timeSpan.textContent = time;
+
+                const fileInput = document.getElementById('editCarouselImageInput');
+                if (fileInput.files && fileInput.files[0]) {
+                    const base64 = await toBase64(fileInput.files[0]);
+                    const img = currentItemEditing.querySelector('.item-img');
+                    if (img) img.src = base64;
+                    currentItemEditing.dataset.image = base64;
+                    updateGroupCover(currentItemEditing.closest('.carousel-group-card'));
+                }
+                closeEditCarouselModal();
+                await triggerAutoSaveCarousels();
+                alert('Imagem atualizada e salva automaticamente!');
+            }
+        }
+
+        window.triggerAutoSaveCarousels = async function() {
+            const groupCards = document.querySelectorAll('.carousel-group-card');
+            let groups = [];
+
+            for (let gCard of groupCards) {
+                const titleInput = gCard.querySelector('.group-title-input');
+                const descInput = gCard.querySelector('.group-desc-input');
+                const title = titleInput ? titleInput.value : '';
+                const desc = descInput ? descInput.value : '';
+                
+                const itemCards = gCard.querySelectorAll('.carousel-item-card');
+                let items = [];
+
+                for (let iCard of itemCards) {
+                    const fileInput = iCard.querySelector('.new-file-input');
+                    const timeInput = iCard.querySelector('.item-time-input') || iCard.querySelector('.item-time');
+                    const time = timeInput ? parseInt(timeInput.value || timeInput.textContent || 6) : 6;
+
+                    if (fileInput && fileInput.files && fileInput.files[0]) {
+                        const base64 = await toBase64(fileInput.files[0]);
+                        items.push({ image: base64, time });
+                    } else {
+                        const img = iCard.querySelector('.item-img');
+                        const image = iCard.dataset.image || (img ? img.src : '');
+                        if (image) {
+                            items.push({ image, time });
+                        }
+                    }
+                }
+
+                if (items.length > 0) {
+                    groups.push({ title, desc, items });
+                }
+            }
 
             try {
-                await addDoc(collection(db, "testimonials"), {
-                    name,
-                    service,
-                    message,
-                    status: 'pendente',
-                    date: new Date().toLocaleDateString('pt-PT')
-                });
-                closeTestimonialModal();
-                alert('Relato enviado com sucesso! Aguardando aprovação no painel administrativo.');
-                document.getElementById('clientName').value = '';
-                document.getElementById('clientMessage').value = '';
-            } catch (err) {
-                alert('Erro ao enviar relato: ' + err.message);
+                await setDoc(doc(db, "siteConfig", "carousel"), { groups });
+                showToast();
+            } catch (error) {
+                console.error('Erro ao auto-guardar carrosséis:', error.message);
             }
+        }
+
+        function toBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
         }
     </script>
 </body>
