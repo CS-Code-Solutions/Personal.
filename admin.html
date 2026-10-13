@@ -8,6 +8,8 @@
     <link rel="icon" type="image/png" href="logo.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Cropper.js CSS para a ferramenta de recorte -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <style> 
         body { font-family: 'Montserrat', sans-serif; } 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
@@ -153,7 +155,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-950 border border-gray-800 p-6 sm:p-8 rounded-3xl">
                     <div>
                         <h3 class="text-xl font-bold text-white mb-1">Conjuntos de Carrosséis do Site</h3>
-                        <p class="text-sm text-gray-400">Gerencie os blocos de carrosséis. As alterações são guardadas automaticamente no Firebase[span_1](start_span)[span_1](end_span).</p>
+                        <p class="text-sm text-gray-400">Gerencie os blocos de carrosséis. As alterações são guardadas automaticamente no Firebase.</p>
                     </div>
                     <button type="button" onclick="addNewCarouselGroup()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-5 py-3 rounded-xl text-sm transition shadow-lg cursor-pointer whitespace-nowrap">+ Novo Conjunto de Carrossel</button>
                 </div>
@@ -280,25 +282,25 @@
         </footer>
     </div>
 
-    <!-- MODAIS DE SUPORTE -->
-    <div id="editCarouselModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-md w-full relative shadow-2xl">
-            <button onclick="closeEditCarouselModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
-            <h3 class="text-2xl font-bold mb-2 text-white">Editar Imagem do Carrossel</h3>
-            <form onsubmit="saveEditedCarouselItem(event)" class="space-y-4 mt-4">
-                <div>
-                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Substituir Imagem (Opcional)</label>
-                    <input type="file" id="editCarouselImageInput" accept="image/*" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-2 text-white text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase text-amber-400 mb-1">Tempo de Exibição (Segundos)</label>
-                    <input type="number" id="editCarouselTime" min="2" max="30" required class="w-full bg-gray-950 border border-gray-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-amber-500">
-                </div>
-                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold py-3.5 rounded-xl transition shadow-xl text-base mt-2 cursor-pointer">Atualizar Imagem</button>
-            </form>
+    <!-- MODAL DE RECORTE DE IMAGEM (CROPPER.JS) -->
+    <div id="cropModal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-gray-950 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-xl w-full relative shadow-2xl space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-bold text-white">Recortar Imagem (Formato 4:5)</h3>
+                <button onclick="closeCropModal()" class="text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
+            </div>
+            <p class="text-xs text-gray-400">Ajuste a área de recorte para garantir o encaixe perfeito no carrossel do site.</p>
+            <div class="max-h-[50vh] overflow-hidden bg-black rounded-2xl flex items-center justify-center border border-gray-800">
+                <img id="cropImageTarget" src="" class="max-w-full block">
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button type="button" onclick="closeCropModal()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition cursor-pointer">Cancelar</button>
+                <button type="button" onclick="confirmCrop()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-8 py-2.5 rounded-xl text-sm transition shadow-lg cursor-pointer">Recortar e Salvar</button>
+            </div>
         </div>
     </div>
 
+    <!-- MODAIS DE SUPORTE -->
     <div id="editSpreadsheetModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full relative shadow-2xl">
             <button onclick="closeEditSpreadsheetModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl font-bold cursor-pointer">&times;</button>
@@ -331,6 +333,9 @@
     <div id="autoSaveToast" class="hidden fixed bottom-6 right-6 bg-emerald-500 text-gray-950 font-bold px-4 py-2 rounded-xl shadow-2xl z-50 text-xs transition-all duration-300">
         Alterações salvas com sucesso ✓
     </div>
+
+    <!-- Cropper.js Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <!-- SCRIPT FIREBASE, AUTENTICAÇÃO GOOGLE E LÓGICA DO PAINEL -->
     <script type="module">
@@ -479,7 +484,7 @@
                 if (docSnap.exists() && docSnap.data().key) {
                     input.value = docSnap.data().key;
                 } else {
-                    input.value = "83430164087"; // Chave Pix padrão solicitada
+                    input.value = "83430164087";
                 }
             } catch (err) {
                 console.error("Erro ao carregar chave Pix:", err);
@@ -940,6 +945,69 @@
             }
         }
 
+        // Variáveis de Recorte com Cropper.js
+        let cropper = null;
+        let activeCardForCrop = null;
+
+        window.openCropModalForInput = function(input) {
+            if (!input.files || !input.files[0]) return;
+            const file = input.files[0];
+            activeCardForCrop = input.closest('.carousel-item-card');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const imgTarget = document.getElementById('cropImageTarget');
+                imgTarget.src = e.target.result;
+                document.getElementById('cropModal').classList.remove('hidden');
+
+                if (cropper) {
+                    cropper.destroy();
+                }
+                cropper = new Cropper(imgTarget, {
+                    aspectRatio: 4 / 5,
+                    viewMode: 1,
+                    autoCropArea: 1,
+                    responsive: true,
+                });
+            };
+            reader.readAsDataURL(file);
+            input.value = ''; // Limpa o input para permitir selecionar a mesma imagem novamente se necessário
+        }
+
+        window.closeCropModal = function() {
+            document.getElementById('cropModal').classList.add('hidden');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            activeCardForCrop = null;
+        }
+
+        window.confirmCrop = function() {
+            if (!cropper || !activeCardForCrop) return;
+
+            const canvas = cropper.getCroppedCanvas({
+                width: 1080,
+                height: 1350,
+                imageSmoothingQuality: 'high'
+            });
+
+            const croppedBase64 = canvas.toDataURL('image/jpeg', 0.9);
+
+            const imgEl = activeCardForCrop.querySelector('.item-img');
+            if (imgEl) {
+                imgEl.src = croppedBase64;
+                imgEl.classList.remove('opacity-40');
+            }
+            activeCardForCrop.dataset.image = croppedBase64;
+
+            const groupCard = activeCardForCrop.closest('.carousel-group-card');
+            updateGroupCover(groupCard);
+            closeCropModal();
+            triggerAutoSaveCarousels();
+            showToast();
+        }
+
         // Auto-Save Gestão de Carrosséis
         async function loadCarouselContent() {
             try {
@@ -989,13 +1057,19 @@
                                         <button type="button" onclick="moveCarouselItemWithinGroup(this, 1)" class="bg-gray-800 hover:bg-gray-700 text-white w-7 h-7 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer" title="Mover">▼</button>
                                     </div>
                                 </div>
-                                <div class="h-44 bg-black rounded-xl mb-3 flex items-center justify-center overflow-hidden border border-gray-800">
+                                <div class="h-44 bg-black rounded-xl mb-3 flex items-center justify-center overflow-hidden border border-gray-800 relative">
                                     <img src="${item.image}" class="w-full h-full object-cover item-img">
                                 </div>
-                                <p class="text-xs text-gray-400">Tempo: <span class="item-time">${item.time || 6}</span> seg</p>
+                                <div class="space-y-2 mb-2">
+                                    <label class="block text-[10px] uppercase font-bold text-gray-400">Tempo (segundos)</label>
+                                    <input type="number" value="${item.time || 6}" min="2" max="30" required onblur="triggerAutoSaveCarousels()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-white text-xs item-time-input">
+                                </div>
                             </div>
                             <div class="flex gap-2 mt-4 pt-3 border-t border-gray-800">
-                                <button type="button" onclick="openEditCarouselModal(this)" class="w-1/2 bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-gray-950 font-bold py-2 rounded-xl text-xs transition border border-blue-500/30 cursor-pointer">Editar</button>
+                                <label class="w-1/2 bg-blue-500/20 hover:bg-blue-500 text-blue-300 hover:text-gray-950 font-bold py-2 rounded-xl text-xs transition border border-blue-500/30 cursor-pointer text-center block">
+                                    Trocar / Recortar
+                                    <input type="file" accept="image/*" class="hidden" onchange="openCropModalForInput(this)">
+                                </label>
                                 <button type="button" onclick="const gCard = this.closest('.carousel-group-card'); this.closest('.carousel-item-card').remove(); checkEmptyGroup(gCard); updateGroupCover(gCard); triggerAutoSaveCarousels();" class="w-1/2 bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold py-2 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Excluir</button>
                             </div>
                         </div>
@@ -1109,6 +1183,7 @@
 
             const tempDiv = document.createElement('div');
             tempDiv.className = "bg-gray-900 border border-gray-800 p-4 rounded-2xl flex flex-col justify-between carousel-item-card";
+            tempDiv.dataset.image = "";
             tempDiv.innerHTML = `
                 <div>
                     <div class="flex justify-between items-center mb-3">
@@ -1118,22 +1193,26 @@
                             <button type="button" onclick="moveCarouselItemWithinGroup(this, 1)" class="bg-gray-800 hover:bg-gray-700 text-white w-7 h-7 rounded-lg text-xs font-bold transition flex items-center justify-center cursor-pointer" title="Mover">▼</button>
                         </div>
                     </div>
-                    <div class="space-y-3 mb-3">
-                        <div>
-                            <label class="block text-[10px] uppercase font-bold text-amber-400 mb-1">Selecionar Ficheiro</label>
-                            <input type="file" accept="image/*" required onchange="triggerAutoSaveCarousels()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-white text-xs new-file-input">
+                    <div class="h-44 bg-black rounded-xl mb-3 flex items-center justify-center overflow-hidden border border-gray-800 relative">
+                        <img src="logo.png" class="w-full h-full object-cover item-img opacity-40">
+                        <div class="absolute inset-0 flex items-center justify-center p-4">
+                            <label class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer shadow-lg transition text-center block">
+                                Escolher e Recortar Imagem
+                                <input type="file" accept="image/*" class="hidden" onchange="openCropModalForInput(this)">
+                            </label>
                         </div>
-                        <div>
-                            <label class="block text-[10px] uppercase font-bold text-amber-400 mb-1">Tempo (segundos)</label>
-                            <input type="number" value="6" min="2" max="30" required onblur="triggerAutoSaveCarousels()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-white text-xs item-time-input">
-                        </div>
+                    </div>
+                    <div class="space-y-2 mb-2">
+                        <label class="block text-[10px] uppercase font-bold text-gray-400">Tempo (segundos)</label>
+                        <input type="number" value="6" min="2" max="30" required onblur="triggerAutoSaveCarousels()" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-white text-xs item-time-input">
                     </div>
                 </div>
                 <div class="flex gap-2 mt-2 pt-2 border-t border-gray-800">
                     <button type="button" onclick="const gCard = this.closest('.carousel-group-card'); this.closest('.carousel-item-card').remove(); checkEmptyGroup(gCard); updateGroupCover(gCard); triggerAutoSaveCarousels();" class="w-full bg-rose-500/20 hover:bg-rose-500 text-rose-300 hover:text-gray-950 font-bold py-2 rounded-xl text-xs transition border border-rose-500/30 cursor-pointer">Remover</button>
                 </div>
             `;
-            grid.appendChild(tempDiv);
+            // INSERE NO TOPO DA LISTA (PREPEND)
+            grid.prepend(tempDiv);
             updateGroupPositions(groupCard);
         }
 
@@ -1163,7 +1242,7 @@
         function updateGroupCover(groupCard) {
             const firstCardImg = groupCard.querySelector('.carousel-item-card .item-img');
             const coverImg = groupCard.querySelector('.group-cover-img');
-            if (firstImg && coverImg) {
+            if (firstImg && coverImg && !firstImg.classList.contains('opacity-40')) {
                 coverImg.src = firstImg.src;
             } else if (coverImg) {
                 coverImg.src = 'logo.png';
@@ -1175,41 +1254,6 @@
             const cards = grid.querySelectorAll('.carousel-item-card');
             if (cards.length === 0) {
                 grid.innerHTML = `<p class="text-xs text-gray-500 italic col-span-full empty-msg">Nenhuma imagem adicionada ainda neste conjunto.</p>`;
-            }
-        }
-
-        let currentItemEditing = null;
-        window.openEditCarouselModal = function(btn) {
-            currentItemEditing = btn.closest('.carousel-item-card');
-            const timeEl = currentItemEditing.querySelector('.item-time');
-            const time = timeEl ? timeEl.textContent : 6;
-            document.getElementById('editCarouselTime').value = time;
-            document.getElementById('editCarouselImageInput').value = '';
-            document.getElementById('editCarouselModal').classList.remove('hidden');
-        }
-
-        window.closeEditCarouselModal = function() {
-            document.getElementById('editCarouselModal').classList.add('hidden');
-        }
-
-        window.saveEditedCarouselItem = async function(e) {
-            e.preventDefault();
-            if (currentItemEditing) {
-                const time = document.getElementById('editCarouselTime').value;
-                const timeSpan = currentItemEditing.querySelector('.item-time');
-                if (timeSpan) timeSpan.textContent = time;
-
-                const fileInput = document.getElementById('editCarouselImageInput');
-                if (fileInput.files && fileInput.files[0]) {
-                    const base64 = await toBase64(fileInput.files[0]);
-                    const img = currentItemEditing.querySelector('.item-img');
-                    if (img) img.src = base64;
-                    currentItemEditing.dataset.image = base64;
-                    updateGroupCover(currentItemEditing.closest('.carousel-group-card'));
-                }
-                closeEditCarouselModal();
-                await triggerAutoSaveCarousels();
-                alert('Imagem atualizada e salva automaticamente!');
             }
         }
 
@@ -1227,19 +1271,12 @@
                 let items = [];
 
                 for (let iCard of itemCards) {
-                    const fileInput = iCard.querySelector('.new-file-input');
-                    const timeInput = iCard.querySelector('.item-time-input') || iCard.querySelector('.item-time');
-                    const time = timeInput ? parseInt(timeInput.value || timeInput.textContent || 6) : 6;
+                    const timeInput = iCard.querySelector('.item-time-input');
+                    const time = timeInput ? parseInt(timeInput.value || 6) : 6;
+                    const image = iCard.dataset.image || '';
 
-                    if (fileInput && fileInput.files && fileInput.files[0]) {
-                        const base64 = await toBase64(fileInput.files[0]);
-                        items.push({ image: base64, time });
-                    } else {
-                        const img = iCard.querySelector('.item-img');
-                        const image = iCard.dataset.image || (img ? img.src : '');
-                        if (image) {
-                            items.push({ image, time });
-                        }
+                    if (image && image !== '') {
+                        items.push({ image, time });
                     }
                 }
 
