@@ -11,12 +11,36 @@
     <style> 
         body { 
             font-family: 'Montserrat', sans-serif; 
+            position: relative;
+            background-color: #030712;
+            overflow-x: hidden;
+        } 
+
+        /* Fundo fixo otimizado para iOS (iPhone) e Android sem perda de qualidade */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             background-image: url('pc.jpeg');
-            background-attachment: fixed;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-        } 
+            z-index: -1;
+            pointer-events: none;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        /* Fundo adaptado para telemóveis caso queira usar cel.jpeg, ou mantém o pc.jpeg */
+        @media (max-width: 768px) {
+            body::before {
+                background-image: url('cel.jpeg');
+            }
+        }
+
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #030712; }
         ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 9999px; }
