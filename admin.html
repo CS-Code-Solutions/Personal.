@@ -153,7 +153,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gray-950 border border-gray-800 p-6 sm:p-8 rounded-3xl">
                     <div>
                         <h3 class="text-xl font-bold text-white mb-1">Conjuntos de Carrosséis do Site</h3>
-                        <p class="text-sm text-gray-400">Gerencie os blocos de carrosséis. As alterações são guardadas automaticamente no Firebase.</p>
+                        <p class="text-sm text-gray-400">Gerencie os blocos de carrosséis. As alterações são guardadas automaticamente no Firebase[span_1](start_span)[span_1](end_span).</p>
                     </div>
                     <button type="button" onclick="addNewCarouselGroup()" class="bg-amber-500 hover:bg-amber-600 text-gray-950 font-bold px-5 py-3 rounded-xl text-sm transition shadow-lg cursor-pointer whitespace-nowrap">+ Novo Conjunto de Carrossel</button>
                 </div>
@@ -990,7 +990,7 @@
                                     </div>
                                 </div>
                                 <div class="h-44 bg-black rounded-xl mb-3 flex items-center justify-center overflow-hidden border border-gray-800">
-                                    <img src="${item.image}" class="max-h-full max-w-full object-contain item-img">
+                                    <img src="${item.image}" class="w-full h-full object-cover item-img">
                                 </div>
                                 <p class="text-xs text-gray-400">Tempo: <span class="item-time">${item.time || 6}</span> seg</p>
                             </div>
@@ -1010,7 +1010,7 @@
                     <div class="flex items-center gap-4">
                         <span class="bg-amber-500 text-gray-950 font-extrabold w-8 h-8 rounded-xl flex items-center justify-center text-sm group-index-badge">1</span>
                         <div class="w-16 h-16 bg-black rounded-xl overflow-hidden border border-gray-800 flex items-center justify-center flex-shrink-0">
-                            <img src="${firstImg}" class="max-h-full max-w-full object-contain group-cover-img">
+                            <img src="${firstImg}" class="w-full h-full object-cover group-cover-img">
                         </div>
                         <div>
                             <h4 class="text-lg font-bold text-white group-title-display">${group.title || 'Conjunto de Carrossel'}</h4>
